@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7faf8">
+  <meta name="description" content="Meet Madoka, an all-in-one Discord bot for server security, moderation, music, games, and community tools.">
+  <title>Madoka</title>
+  <link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+  <div class="intro-splash" aria-hidden="true">
+    <div class="intro-mark"><img src="https://cdn.discordapp.com/avatars/1555693618373853305/3785167a04091262f79e12e7a8bbc36e.png?size=256" alt=""></div>
+    <div class="intro-name">Madoka</div>
+    <div class="intro-line"></div>
+  </div>
+  <svg aria-hidden="true" width="0" height="0" class="svg-sprite">
+    <symbol id="i-bot" viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="13" rx="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 3v4M8.5 12h.01M15.5 12h.01M9 16h6M2 11v5m20-5v5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-command" viewBox="0 0 24 24"><path d="M9 7a3 3 0 1 1-3-3h3v6H6a3 3 0 1 0 3 3zm6 0a3 3 0 1 0 3-3h-3v6h3a3 3 0 1 1-3 3zm-6 6v3a3 3 0 1 1-3-3h3zm6 0v3a3 3 0 1 0 3-3h-3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="i-pulse" viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-command-square" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8 9h8M8 13h5M8 17h8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2m16 0v-2a4 4 0 0 0-3-3.87M14 3.13a4 4 0 0 1 0 7.75" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="10" cy="7" r="4" fill="none" stroke="currentColor" stroke-width="1.7"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 2.5 17.4A2 2 0 0 0 4.2 20h15.6a2 2 0 0 0 1.7-2.6L13.7 3.9a2 2 0 0 0-3.4 0Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 9v4m0 3h.01" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.5 15.2A8.6 8.6 0 0 1 8.8 3.5 8.7 8.7 0 1 0 20.5 15.2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-discord" viewBox="0 0 24 24"><path d="M19.7 5.1A18 18 0 0 0 15.3 3l-.6 1.2a16 16 0 0 0-5.4 0L8.7 3a18 18 0 0 0-4.4 2.1C1.5 9.2.7 13.2 1.1 17.2a18 18 0 0 0 5.4 2.7l1.2-2a11 11 0 0 1-1.9-.9l.5-.4a13 13 0 0 0 11.4 0l.5.4a11 11 0 0 1-1.9.9l1.2 2a18 18 0 0 0 5.4-2.7c.5-4.7-.8-8.7-3.2-12.1ZM8.8 14.4c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2Zm6.4 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2Z" fill="currentColor"/></symbol>
+  </svg>
+  <div class="app">
+    <aside class="sidebar">
+      <a class="brand" href="#home" data-goto="home" aria-label="Madoka home">
+        <span class="brand-mark"><img src="https://cdn.discordapp.com/avatars/1555693618373853305/3785167a04091262f79e12e7a8bbc36e.png?size=256" alt=""></span>
+        <span><span class="brand-name">Madoka</span><span class="brand-caption">Discord Bot</span></span>
+      </a>
+      <div class="nav-label">Explore</div>
+      <nav class="nav" aria-label="Main navigation">
+        <button class="nav-button active" type="button" data-page="home"><svg><use href="#i-home"></use></svg>Home</button>
+        <button class="nav-button" type="button" data-page="docs"><svg><use href="#i-command-square"></use></svg>Docs</button>
+        <button class="nav-button" type="button" data-page="commands"><svg><use href="#i-command"></use></svg>Commands</button>
+        <button class="nav-button" type="button" data-page="premium"><svg><use href="#i-shield"></use></svg>Premium</button>
+        <button class="nav-button" type="button" data-page="developers"><svg><use href="#i-users"></use></svg>Madoka Developers</button>
+      </nav>
+      <div class="sidebar-spacer"></div>
+      <div class="side-support">
+        <div class="side-support-title"><span class="support-dot"></span>Need a hand?</div>
+        <p>Join the Virtus X Devs community for help and updates.</p>
+        <a class="support-link" href="https://discord.gg/QXfWH52nM" target="_blank" rel="noopener noreferrer">Join our Discord <svg><use href="#i-arrow"></use></svg></a>
+      </div>
+      <div class="sidebar-foot">Made for your community</div>
+    </aside>
+    <main class="main">
+      <header class="topbar">
+        <div class="crumb">Madoka <span aria-hidden="true">/</span> <strong id="crumb-page">Home</strong></div>
+        <div class="top-actions">
+          <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false"><svg aria-hidden="true"><use href="#i-moon"></use></svg><span>Dark mode</span></button>
+          <a class="invite-small" href="https://discord.com/oauth2/authorize?client_id=1555693618373853305&amp;permissions=8&amp;integration_type=0&amp;scope=bot" target="_blank" rel="noopener noreferrer"><svg><use href="#i-discord"></use></svg>Invite bot</a>
+        </div>
+      </header>
+      <div class="content">
+        <section class="page active" id="page-home" aria-labelledby="home-title">
+          <div class="hero">
+            <div class="hero-copy">
+              <div class="eyebrow"><svg><use href="#i-bot"></use></svg>Your all-in-one Discord bot</div>
+              <h1 id="home-title">Meet <span>Madoka.</span></h1>
+              <p>Madoka is an all-in-one Discord bot for server security, automoderation, music, games, and community tools—all in one place.</p>
+              <div class="hero-actions">
+                <a class="button-primary" href="https://discord.com/oauth2/authorize?client_id=1555693618373853305&amp;permissions=8&amp;integration_type=0&amp;scope=bot" target="_blank" rel="noopener noreferrer"><svg><use href="#i-discord"></use></svg>Add Madoka to Discord</a>
+                <button class="button-secondary" type="button" data-goto="commands"><svg><use href="#i-command"></use></svg>Explore commands</button>
+              </div>
+            </div>
+            <div class="hero-bot" aria-hidden="true"><div class="hero-bot-inner"><img src="https://cdn.discordapp.com/avatars/1555693618373853305/3785167a04091262f79e12e7a8bbc36e.png?size=512" alt=""></div></div>
+          </div>
+          <div class="section-head">
+            <div><div class="eyebrow">At a glance</div><h2>Built for your server</h2></div>
+            <p>Useful tools and features from one Discord bot.</p>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-card"><span class="stat-icon"><svg><use href="#i-command-square"></use></svg></span><span><span class="stat-value">629</span><span class="stat-label">Total commands</span></span></div>
+            <div class="stat-card"><span class="stat-icon"><svg><use href="#i-shield"></use></svg></span><span><span class="stat-value">16</span><span class="stat-label">Main feature areas</span></span></div>
+            <div class="stat-card"><span class="stat-icon"><svg><use href="#i-users"></use></svg></span><span><span class="stat-value">Prefix <span class="prefix-mark">&gt;</span></span><span class="stat-label">Default prefix</span></span></div>
+          </div>
+          <div class="section-head">
+            <div><div class="eyebrow">What Madoka can do</div><h2>Main features</h2></div>
+          </div>
+          <div class="feature-grid" id="main-features"></div>
+          <div class="section-head">
+            <div><div class="eyebrow">And there's more</div><h2>Extra features</h2></div>
+          </div>
+          <div class="feature-grid" id="extra-features"></div>
+          <div class="support-banner">
+            <div><h3>Need help with the Discord bot?</h3><p>Contact a developer for support, bug reports, or Premium, or join Virtus X Devs for help and updates.</p></div>
+            <div class="support-actions"><button class="button-secondary" type="button" data-goto="developers">Contact developers</button><a class="button-secondary" href="https://discord.gg/QXfWH52nM" target="_blank" rel="noopener noreferrer"><svg><use href="#i-discord"></use></svg>Join Virtus X Devs</a></div>
+          </div>
+        </section>
+        <section class="page" id="page-docs" aria-labelledby="docs-title">
+          <div class="page-title">
+            <div><div class="eyebrow"><svg><use href="#i-command-square"></use></svg>Madoka Discord bot</div><h1 id="docs-title">Docs, made simple.</h1><p>Choose a category to browse Madoka Discord bot commands and learn how to use them.</p></div>
+          </div>
+          <div class="docs-intro">
+            <div class="eyebrow">Quick start</div>
+            <h2>One prefix. Plenty to explore.</h2>
+            <p>Madoka is a Discord bot that helps with server safety, moderation, music, and community tools. Its default prefix is <code>&gt;</code>. Server administrators can change it with <code>setprefix !</code>; the exclamation mark is only an example. Slash commands can also be available in Discord's command menu.</p>
+          </div>
+          <section class="docs-section docs-guide" aria-labelledby="docs-start-title">
+            <div class="docs-section-heading"><div><div class="eyebrow">Start here</div><h2 id="docs-start-title">Set up Madoka in your server</h2><p>A quick, safe checklist to help your community get started.</p></div></div>
+            <div class="docs-guide-grid">
+              <article class="docs-guide-card"><span class="docs-guide-step">01</span><h3>Invite the bot</h3><p>Use the Invite bot button and choose the Discord server where you have permission to add bots. Review the requested permissions before confirming.</p></article>
+              <article class="docs-guide-card"><span class="docs-guide-step">02</span><h3>Choose a command channel</h3><p>Make sure Madoka can view the channel and send messages there. For moderation or setup actions, the bot and the person running the command also need the relevant Discord permissions.</p></article>
+              <article class="docs-guide-card"><span class="docs-guide-step">03</span><h3>Try a command</h3><p>Try <code>&gt;ping</code> or browse the categories below. Use the server's active prefix; <code>setprefix !</code> shows how an administrator could switch to <code>!</code>.</p></article>
+            </div>
+          </section>
+          <section class="docs-section docs-guide-details" aria-label="Madoka setup and help">
+            <details class="docs-guide-detail">
+              <summary>Permissions, roles, and server safety</summary>
+              <div><p>Discord controls what Madoka can do. Give it only the permissions its enabled features need, and keep its role below roles it should not manage. Commands such as ban, kick, channel locking, and role management depend on both Discord permissions and the bot role's position.</p><p>Use destructive actions carefully, review the target before confirming, and avoid sharing private tokens or account credentials. If a command is denied, check the bot's channel access, role position, and the permissions of the person running it.</p></div>
+            </details>
+            <details class="docs-guide-detail">
+              <summary>Prefix and slash commands</summary>
+              <div><p>The default prefix shown for Madoka is <code>&gt;</code>. A server administrator can change it with <code>setprefix !</code>; <code>!</code> is just an example, and your server may use a different prefix afterward. Put the active prefix directly before a prefix command, such as <code>&gt;help</code> with the default.</p><p>Slash commands are selected from Discord's built-in command menu and do not need a message prefix. Availability can depend on the command and server configuration.</p></div>
+            </details>
+            <details class="docs-guide-detail">
+              <summary>Music and voice troubleshooting</summary>
+              <div><p>For music commands, join the voice channel first and check that Madoka can view and connect to it. If playback or a command does not work, confirm the bot is online, the channel permissions allow it, and the command is available to your server.</p><p>Some features require additional Discord permissions or server setup. Check the relevant category guide and ask in the support server if the issue continues.</p></div>
+            </details>
+            <details class="docs-guide-detail">
+              <summary>Where to get help</summary>
+              <div><p>Use the command search and category browser below to look up documented commands. For a bug report, include what you tried, the server/channel context, and any error message—but do not post passwords, bot tokens, or other secrets.</p><p>For help from the team, visit Madoka Developers or join the Virtus X Devs community using the links on this site.</p></div>
+            </details>
+          </section>
+          <section class="docs-browser" aria-label="Browse documentation categories">
+            <div class="docs-toolbar">
+              <label class="search-wrap"><svg><use href="#i-search"></use></svg><input class="search-input" id="docs-search" type="search" placeholder="Find a category or command..." autocomplete="off" aria-label="Search documentation"></label>
+              <span class="docs-category-hint">Choose a category</span>
+            </div>
+            <div class="docs-category-grid" id="docs-category-grid" aria-label="Documentation categories"></div>
+          </section>
+          <section class="docs-results-panel" id="docs-results-panel" aria-live="polite" hidden>
+            <div class="docs-results-heading" id="docs-results-heading"></div>
+            <div class="docs-command-list" id="docs-command-list"></div>
+            <button class="docs-load-more" id="docs-load-more" type="button" hidden></button>
+            <div class="empty-state" id="docs-empty" hidden>No commands match your search. Try another word.</div>
+          </section>
+        </section>
+        <section class="page" id="page-premium" aria-labelledby="premium-title">
+          <div class="page-title">
+            <div><div class="eyebrow"><svg><use href="#i-shield"></use></svg>Extra perks</div><h1 id="premium-title">Madoka Premium</h1><p>Explore plans, Premium commands, and how to activate your server's access.</p></div>
+          </div>
+          <div class="premium-overview">
+            <div class="premium-banner">
+              <div><div class="eyebrow">More for your community</div><h2>Unlock more with Premium.</h2><p>Choose a plan, contact a Madoka developer to purchase and receive a redeem code, then activate Premium for your Discord server. Purchases are arranged directly with a developer; this page does not process payments.</p></div>
+              <img src="https://cdn.discordapp.com/emojis/1557425083625242656.webp?size=96&amp;animated=true" alt="" loading="lazy">
+            </div>
+            <div class="premium-plans" aria-label="Premium plans">
+              <article class="premium-plan"><span class="premium-plan-label">Monthly</span><strong class="premium-price">₱99</strong><span class="premium-period">per month</span><p>Flexible Premium access for your server.</p></article>
+              <article class="premium-plan featured"><span class="premium-plan-label">Yearly</span><strong class="premium-price">₱199</strong><span class="premium-period">per year</span><p>One year of Premium access at the yearly rate.</p></article>
+              <article class="premium-plan"><span class="premium-plan-label">Lifetime</span><strong class="premium-price">₱350</strong><span class="premium-period">one-time</span><p>Lifetime Premium access for your server.</p></article>
+            </div>
+            <div class="premium-redeem">
+              <span class="stat-icon"><svg><use href="#i-shield"></use></svg></span>
+              <div><h3>Activate Premium for your Discord server</h3><p>In a server where Madoka is installed, add that server's active prefix before the command <code>premium redeem &lt;code&gt;</code>. The prefix may be different if a server administrator changed it. This command requires Administrator permission. Use the same active prefix before <code>premium status</code> to check access or <code>premium trial</code> to claim the trial if eligible.</p></div>
+            </div>
+            <section class="docs-section" aria-labelledby="premium-commands-title">
+              <h2 id="premium-commands-title">Premium command guide</h2>
+              <p>Explore Premium activation, backup, security, giveaways, and server customization commands.</p>
+              <div id="premium-command-guide"></div>
+            </section>
+            <div class="docs-callout">Need help, want to report a bug, or interested in Premium? Visit <button class="inline-link" type="button" data-goto="developers">Madoka Developers</button> to contact the team.</div>
+          </div>
+        </section>
+        <section class="page" id="page-developers" aria-labelledby="developers-title">
+          <div class="page-title">
+            <div><div class="eyebrow"><svg><use href="#i-users"></use></svg>Meet the team</div><h1 id="developers-title">Madoka Developers</h1><p>Contact the team for help with the Madoka Discord bot, bug reports, or Premium.</p></div>
+          </div>
+          <p class="developer-page-intro">Select a verified Madoka developer to open their Discord profile and ask about bot support, report a bug, or learn about Premium.</p>
+          <div class="developer-page-list">
+            <article class="developer-profile">
+              <img class="developer-profile-avatar" src="https://cdn.discordapp.com/avatars/1443924448230117436/a337dac71f9448d0756634fe5dbc83a5.png?size=256" alt="Keso's Discord avatar" loading="lazy">
+              <div class="developer-profile-info"><h2 class="developer-name"><span class="developer-name-text">Keso</span><span class="verified-badge" role="img" aria-label="Verified developer" title="Verified developer"><svg aria-hidden="true"><use href="#i-check"></use></svg></span></h2><p>Madoka Developer</p><a class="developer-profile-link" href="https://discord.com/users/1443924448230117436" target="_blank" rel="noopener noreferrer">Open Keso's Discord profile <svg><use href="#i-arrow"></use></svg></a></div>
+            </article>
+            <article class="developer-profile">
+              <img class="developer-profile-avatar" src="https://cdn.discordapp.com/avatars/1488018421022195854/f27cf67c210b1c85ccd9f74cf9355f9d.png?size=256" alt="Ryo's Discord avatar" loading="lazy">
+              <div class="developer-profile-info"><h2 class="developer-name"><span class="developer-name-text">Ryo</span><span class="verified-badge" role="img" aria-label="Verified developer" title="Verified developer"><svg aria-hidden="true"><use href="#i-check"></use></svg></span></h2><p>Madoka Developer</p><a class="developer-profile-link" href="https://discord.com/users/1488018421022195854" target="_blank" rel="noopener noreferrer">Open Ryo's Discord profile <svg><use href="#i-arrow"></use></svg></a></div>
+            </article>
+          </div>
+          <section class="review-panel" aria-labelledby="review-title">
+            <div class="review-heading"><div><div class="eyebrow">Your feedback</div><h2 id="review-title">How is Madoka working for your server?</h2><p>Leave a star rating. A comment is optional.</p></div><span class="review-mark" aria-hidden="true">★</span></div>
+            <form class="review-form" id="review-form">
+              <fieldset class="review-rating">
+                <legend>Your rating</legend>
+                <div class="review-stars" role="radiogroup" aria-label="Rate Madoka from 1 to 5 stars">
+                  <input id="review-star-1" type="radio" name="rating" value="1"><label for="review-star-1" aria-label="1 star">★</label>
+                  <input id="review-star-2" type="radio" name="rating" value="2"><label for="review-star-2" aria-label="2 stars">★</label>
+                  <input id="review-star-3" type="radio" name="rating" value="3"><label for="review-star-3" aria-label="3 stars">★</label>
+                  <input id="review-star-4" type="radio" name="rating" value="4"><label for="review-star-4" aria-label="4 stars">★</label>
+                  <input id="review-star-5" type="radio" name="rating" value="5"><label for="review-star-5" aria-label="5 stars">★</label>
+                </div>
+              </fieldset>
+              <label class="review-comment-label" for="review-comment">Comment <span>Optional</span></label>
+              <textarea id="review-comment" name="comment" maxlength="500" rows="3" placeholder="What do you like, or what could be better?"></textarea>
+              <div class="review-form-footer"><p>Your review is saved only in this browser. It is not posted publicly or shared with other visitors.</p><button class="button-primary" type="submit">Save my rating</button></div>
+              <p class="review-status" id="review-status" role="status" aria-live="polite"></p>
+            </form>
+            <div class="saved-review" id="saved-review" hidden></div>
+          </section>
+        </section>
+        <section class="page" id="page-commands" aria-labelledby="commands-title">
+          <div class="page-title">
+            <div><div class="eyebrow"><svg><use href="#i-command"></use></svg>Madoka Discord bot</div><h1 id="commands-title">Command library</h1><p>Browse commands for the Madoka Discord bot. Click the copy icon beside a command to copy it.</p></div>
+          </div>
+          <div class="command-toolbar">
+            <label class="search-wrap"><svg><use href="#i-search"></use></svg><input class="search-input" id="command-search" type="search" placeholder="Search commands or categories..." autocomplete="off" aria-label="Search commands or categories"></label>
+            <details class="category-picker" id="category-picker">
+              <summary class="category-picker-trigger"><span id="category-filter-label">All categories</span><svg aria-hidden="true"><use href="#i-chevron"></use></svg></summary>
+              <div class="category-picker-menu" id="category-filter" role="listbox" aria-label="Filter by category"></div>
+            </details>
+          </div>
+          <div class="command-summary"><span id="result-count" aria-live="polite"></span><span>Click <strong>copy</strong> to copy the command</span></div>
+          <div class="command-groups" id="command-groups"></div>
+          <div class="empty-state" id="empty-state" hidden>No matching commands. Try another search.</div>
+        </section>
+        <footer class="page-footer">Powered by <strong>Virtus X Development.</strong></footer>
+      </div>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"><svg><use href="#i-check"></use></svg><span id="toast-message">Command copied!</span></div>
+  <script src="app.js" defer></script>
+
+</body>
+</html>
