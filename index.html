@@ -1,0 +1,2181 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f8fc">
+  <meta name="description" content="Meet Madoka, an all-in-one Discord bot for server security, moderation, music, games, and community tools.">
+  <title>Madoka</title>
+  <style>
+:root {
+      color-scheme: light;
+      --ink: #202532;
+      --muted: #737b8c;
+      --green: #5575a5;
+      --green-dark: #3f5f8f;
+      --green-soft: #edf2fa;
+      --line: #e6eaf1;
+      --surface: #fff;
+      --canvas: #f7f8fc;
+      --shadow: 0 14px 40px rgba(38, 50, 74, .07);
+      --pink: #eb5caa;
+      --pink-dark: #a82970;
+      --pink-soft: #fff0f8;
+      font-family: "Trebuchet MS", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+    }
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --ink: #f1edf3;
+      --muted: #b0aab5;
+      --green: #e883b8;
+      --green-dark: #f0a5ce;
+      --green-soft: #3b2936;
+      --line: #39313d;
+      --surface: #1e1b22;
+      --canvas: #141218;
+      --shadow: 0 14px 40px rgba(0, 0, 0, .28);
+    }
+    :root[data-theme="pink"] {
+      color-scheme: light;
+      --ink: #382234;
+      --muted: #866f82;
+      --green: #eb5caa;
+      --green-dark: #a82970;
+      --green-soft: #fff0f8;
+      --line: #f1dbe8;
+      --surface: #fffafd;
+      --canvas: #fff6fb;
+      --shadow: 0 14px 40px rgba(152, 54, 112, .12);
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    .svg-sprite { position: absolute; overflow: hidden; }
+    html { scroll-behavior: smooth; }
+    body { position: relative; overflow-x: clip; margin: 0; min-width: 0; min-height: 100vh; color: var(--ink); background: radial-gradient(ellipse at 82% 7%, #e8edf7 0, transparent 34%), var(--canvas); font-size: 16px; transition: color .25s ease, background-color .25s ease; }
+    :root[data-theme="dark"] body { background: radial-gradient(ellipse at 82% 7%, #302637 0, transparent 38%), var(--canvas); }
+    :root[data-theme="pink"] body { background: radial-gradient(ellipse at 82% 7%, #ffe2f2 0, transparent 38%), var(--canvas); }
+    body::before { position: fixed; inset: -25%; z-index: 0; pointer-events: none; background: radial-gradient(ellipse at 20% 30%, #dfe7f466, transparent 38%), radial-gradient(ellipse at 76% 72%, #e3e6f166, transparent 34%); content: ""; animation: ambient-drift 22s ease-in-out infinite alternate; }
+    :root[data-theme="dark"] body::before { background: radial-gradient(ellipse at 20% 30%, #5c3c5940, transparent 38%), radial-gradient(ellipse at 76% 72%, #382d3e40, transparent 34%); }
+    :root[data-theme="pink"] body::before { background: radial-gradient(ellipse at 20% 30%, #ffc1e340, transparent 38%), radial-gradient(ellipse at 76% 72%, #f9cce366, transparent 34%); }
+    .ambient-canvas, .cursor-trail { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    .ambient-canvas { z-index: 0; }
+    .cursor-trail { z-index: 30; }
+    @keyframes ambient-drift { from { transform: translate3d(-1%, -1%, 0) scale(1); } to { transform: translate3d(1.5%, 1%, 0) scale(1.04); } }
+    button, input, select { font: inherit; }
+    button { color: inherit; }
+    a { color: inherit; text-decoration: none; }
+    .app { position: relative; z-index: 1; min-height: 100vh; animation: app-arrive .85s cubic-bezier(.2,.75,.25,1) both; }
+    .intro-splash { position: fixed; inset: 0; z-index: 20; display: grid; place-content: center; justify-items: center; gap: 17px; background: radial-gradient(circle at 50% 44%, #eef1f8 0, #f7f8fc 48%, #e9edf5 100%); pointer-events: none; animation: splash-away .7s cubic-bezier(.6,0,.8,.2) 1.05s forwards; }
+    :root[data-theme="dark"] .intro-splash { background: radial-gradient(circle at 50% 44%, #302637 0, #141218 52%, #1b1720 100%); }
+    .intro-mark { width: 92px; height: 92px; overflow: hidden; border: 4px solid #ffffffd9; border-radius: 30px; box-shadow: 0 18px 60px #5575a538; animation: intro-mark-in .75s cubic-bezier(.16,1,.3,1) both; }
+    .intro-mark img { width: 100%; height: 100%; object-fit: cover; }
+    .intro-name { color: var(--ink); font-size: 22px; font-weight: 800; letter-spacing: -.06em; animation: intro-name-in .65s ease .12s both; }
+    .intro-line { width: 78px; height: 3px; overflow: hidden; border-radius: 4px; background: var(--green-soft); }
+    .intro-line::after { display: block; width: 40%; height: 100%; border-radius: inherit; background: var(--green); content: ""; animation: intro-progress .75s ease .15s both; }
+    @keyframes app-arrive { from { opacity: 0; transform: translateY(12px) scale(.995); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes intro-mark-in { from { opacity: 0; transform: translateY(18px) scale(.72) rotate(-9deg); } to { opacity: 1; transform: translateY(0) scale(1) rotate(0); } }
+    @keyframes intro-name-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes intro-progress { from { transform: translateX(-120%); } to { transform: translateX(250%); } }
+    @keyframes splash-away { to { opacity: 0; visibility: hidden; transform: scale(1.025); } }
+    .sidebar {
+      position: fixed; inset: 0 auto 0 0; z-index: 5; display: flex; width: 250px; flex-direction: column;
+      padding: 26px 17px 18px; background: var(--surface); border-right: 1px solid var(--line);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; padding: 2px 9px 29px; }
+    .brand-mark { display: grid; width: 42px; height: 42px; flex: 0 0 auto; place-items: center; overflow: hidden; color: white; background: linear-gradient(145deg, #718bb5, #4d668f); border: 2px solid #e2e8f2; border-radius: 14px; box-shadow: 0 6px 14px #5575a535; }
+    .brand-mark img { width: 100%; height: 100%; object-fit: cover; }
+    .brand-name { font-weight: 760; font-size: 17px; letter-spacing: -.04em; }
+    .brand-caption { display: block; margin-top: 2px; color: var(--muted); font-size: 11px; }
+    .nav-label { padding: 0 11px 10px; color: #a0aaa4; font-size: 10px; font-weight: 750; letter-spacing: .13em; text-transform: uppercase; }
+    .nav { display: grid; gap: 6px; }
+    .nav-button { display: flex; align-items: center; gap: 12px; width: 100%; padding: 11px 12px; border: 0; border-radius: 11px; background: transparent; color: #68756d; cursor: pointer; text-align: left; font-size: 13px; font-weight: 630; transition: background .24s ease, color .24s ease, transform .24s cubic-bezier(.2,.75,.25,1), box-shadow .24s ease; }
+    .nav-button:hover { background: #f5f8f5; color: var(--green-dark); }
+    .nav-button.active { color: var(--green-dark); background: var(--green-soft); box-shadow: inset 3px 0 var(--green); transform: translateX(2px); }
+    .nav-button svg { width: 18px; height: 18px; flex: 0 0 auto; }
+    .sidebar-spacer { flex: 1; }
+    .side-support { padding: 15px; border: 1px solid #e3e8f0; border-radius: 15px; background: linear-gradient(145deg, #f7f8fb, #eef1f7); }
+    .support-dot { width: 8px; height: 8px; border-radius: 50%; background: #718bb5; box-shadow: 0 0 0 4px #718bb51e; }
+    .side-support-title { display: flex; align-items: center; gap: 9px; font-size: 12px; font-weight: 730; }
+    .side-support p { margin: 9px 0 13px; color: #708078; font-size: 11px; line-height: 1.6; }
+    .support-link { display: flex; align-items: center; justify-content: space-between; color: var(--green-dark); font-size: 11px; font-weight: 730; }
+    .support-link svg { width: 14px; height: 14px; }
+    .sidebar-foot { padding: 19px 9px 0; color: #a0aaa4; font-size: 10px; }
+    .main { min-height: 100vh; margin-left: 250px; }
+    .topbar { position: sticky; top: 0; z-index: 4; display: flex; height: 66px; align-items: center; justify-content: space-between; padding: 0 42px; border-bottom: 1px solid #e6eaf1c9; background: #f7f8fced; backdrop-filter: blur(14px); }
+    :root[data-theme="dark"] .topbar { border-color: #39313dd9; background: #141218ed; }
+    .crumb { color: #8a968f; font-size: 12px; }
+    .crumb strong { color: #405048; font-weight: 650; }
+    .top-actions { display: flex; align-items: center; gap: 10px; }
+    .theme-toggle { display: inline-flex; min-height: 38px; align-items: center; justify-content: center; gap: 8px; padding: 0 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); cursor: pointer; font-size: 13px; font-weight: 650; transition: border-color .2s, transform .2s, background .2s; }
+    .theme-toggle:hover { transform: translateY(-1px); border-color: #9eafd0; }
+    .theme-toggle svg { width: 17px; height: 17px; color: var(--green); }
+    .invite-small { display: inline-flex; align-items: center; gap: 7px; padding: 9px 13px; border: 0; border-radius: 9px; background: var(--green); color: white; font-size: 11px; font-weight: 700; transition: .2s; }
+    .invite-small:hover, .button-primary:hover { background: var(--green-dark); transform: translateY(-1px); }
+    .invite-small svg { width: 14px; height: 14px; }
+    .content { width: min(1120px, 100%); margin: 0 auto; padding: 37px 42px 28px; }
+    .page { display: none; animation: enter .48s cubic-bezier(.2,.75,.25,1) both; }
+    .page.active { display: block; }
+    @keyframes enter { from { opacity: 0; transform: translateY(12px); filter: blur(3px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+    .eyebrow { display: inline-flex; align-items: center; gap: 7px; color: var(--green); font-size: 10px; font-weight: 780; letter-spacing: .12em; text-transform: uppercase; }
+    .eyebrow svg { width: 14px; height: 14px; }
+    h1, h2, h3, p { margin-top: 0; }
+    .hero { position: relative; overflow: hidden; padding: 37px 39px; border: 1px solid #dce5f2; border-radius: 22px; background: linear-gradient(115deg, #edf2fa 0%, #f7f9fc 51%, #e8eef8 100%); }
+    .hero::after { position: absolute; top: -118px; right: 54px; width: 300px; height: 300px; border: 1px solid #ffffffc9; border-radius: 50%; content: ""; box-shadow: 0 0 0 33px #ffffff3b, 0 0 0 68px #ffffff24; }
+    .hero-copy { position: relative; z-index: 1; max-width: 600px; }
+    .hero h1 { margin: 15px 0 12px; font-size: clamp(36px, 5vw, 55px); line-height: 1.04; letter-spacing: -.065em; }
+    .hero h1 span { color: var(--green); }
+    .hero-copy > p { max-width: 510px; margin-bottom: 22px; color: #697970; font-size: 14px; line-height: 1.75; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    .button-primary, .button-secondary { display: inline-flex; min-height: 41px; align-items: center; justify-content: center; gap: 8px; padding: 0 15px; border: 1px solid transparent; border-radius: 9px; cursor: pointer; font-size: 11px; font-weight: 720; transition: .2s; }
+    .button-primary { background: var(--green); color: white; box-shadow: 0 5px 13px #21865c29; }
+    .button-secondary { border-color: #dce8de; background: #ffffffb5; color: #43564a; }
+    .button-secondary:hover { border-color: #afd4b8; background: white; }
+    .button-primary svg, .button-secondary svg { width: 15px; height: 15px; }
+    .hero-bot { position: absolute; right: 9%; bottom: -47px; display: grid; width: 177px; height: 177px; place-items: center; border: 1px solid #ffffffd6; border-radius: 50%; background: #ffffff61; }
+    .hero-bot-inner { display: grid; width: 116px; height: 116px; place-items: center; overflow: hidden; border: 8px solid #ffffffa8; border-radius: 38px; background: white; box-shadow: 0 16px 34px #26774b37; transform: rotate(-8deg); animation: avatar-float 5s ease-in-out infinite; }
+    .hero-bot-inner img { width: 100%; height: 100%; object-fit: cover; transform: rotate(8deg) scale(1.12); }
+    @keyframes avatar-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -8px; } }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 15px; margin: 30px 0 15px; }
+    .section-head h2 { margin: 5px 0 0; font-size: 18px; letter-spacing: -.035em; }
+    .section-head p { margin: 0; color: var(--muted); font-size: 11px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 13px; }
+    .stat-card { display: flex; align-items: center; gap: 13px; min-height: 77px; padding: 15px; border: 1px solid var(--line); border-radius: 13px; background: var(--surface); }
+    .stat-icon { display: grid; width: 38px; height: 38px; flex: 0 0 auto; place-items: center; border-radius: 11px; background: #eff7f0; color: var(--green); }
+    .stat-icon svg { width: 18px; height: 18px; }
+    .stat-value { font-size: 19px; font-weight: 760; letter-spacing: -.04em; }
+    .stat-label { margin-top: 2px; color: var(--muted); font-size: 10px; }
+    .stat-value, .stat-label { display: block; }
+    .prefix-mark { color: var(--green); }
+    .feature-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .feature-card { min-height: 71px; padding: 13px; border: 1px solid var(--line); border-radius: 12px; background: white; }
+    .feature-card strong { display: block; font-size: 11px; font-weight: 710; }
+    .feature-card span { display: block; margin-top: 7px; color: var(--muted); font-size: 9px; line-height: 1.45; }
+    .feature-card.extra { background: #fbfdfb; }
+    .support-banner { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-top: 25px; padding: 19px 21px; border: 1px solid #e5eee7; border-radius: 14px; background: white; }
+    .support-banner h3 { margin: 0 0 5px; font-size: 13px; }
+    .support-banner p { margin: 0; color: var(--muted); font-size: 10px; line-height: 1.6; }
+    .support-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .page-title { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin: 7px 0 22px; }
+    .page-title h1 { margin: 7px 0 6px; font-size: 31px; letter-spacing: -.055em; }
+    .page-title p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+    .command-toolbar { display: flex; gap: 10px; margin-bottom: 18px; }
+    .search-wrap { position: relative; flex: 1; }
+    .search-wrap svg { position: absolute; top: 50%; left: 13px; width: 16px; height: 16px; color: #91a097; transform: translateY(-50%); }
+    .search-input { width: 100%; height: 42px; padding: 0 14px 0 39px; border: 1px solid #e2eae4; border-radius: 10px; outline: none; background: white; color: var(--ink); font-size: 11px; }
+    .search-input:focus, .category-picker-trigger:focus-visible { border-color: #86bd98; box-shadow: 0 0 0 3px #21865c12; }
+    .category-picker { position: relative; min-width: 178px; }
+    .category-picker-trigger { display: flex; height: 42px; align-items: center; justify-content: space-between; gap: 12px; padding: 0 12px; border: 1px solid #e2eae4; border-radius: 10px; outline: none; background: white; color: #56645b; cursor: pointer; font-size: 11px; list-style: none; transition: border-color .2s, box-shadow .2s; }
+    .category-picker-trigger::-webkit-details-marker { display: none; }
+    .category-picker-trigger svg { width: 16px; height: 16px; transition: transform .2s ease; }
+    .category-picker[open] .category-picker-trigger svg { transform: rotate(180deg); }
+    .category-picker-menu { position: absolute; top: calc(100% + 7px); right: 0; z-index: 6; display: grid; width: min(260px, 80vw); max-height: 320px; gap: 3px; overflow-y: auto; padding: 6px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); box-shadow: var(--shadow); animation: picker-pop .18s ease both; }
+    .category-picker-option { width: 100%; padding: 8px 10px; border: 0; border-radius: 7px; background: transparent; color: var(--ink); cursor: pointer; text-align: left; font-size: 12px; transition: background .16s, color .16s; }
+    .category-picker-option:hover, .category-picker-option[aria-selected="true"] { background: var(--green-soft); color: var(--green-dark); }
+    @keyframes picker-pop { from { opacity: 0; transform: translateY(-5px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .command-summary { display: flex; justify-content: space-between; gap: 12px; margin: 0 2px 13px; color: var(--muted); font-size: 10px; }
+    .command-summary strong { color: #4c5c52; font-weight: 690; }
+    .command-groups { display: grid; gap: 12px; }
+    .command-group { overflow: hidden; border: 1px solid var(--line); border-radius: 13px; background: white; transition: border-color .28s ease, box-shadow .28s ease, background-color .28s ease; }
+    .command-group:hover { border-color: #c9dfcf; box-shadow: 0 8px 22px #245c3c0c; }
+    .group-head { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 14px; padding: 13px 16px; border: 0; background: #fcfdfc; color: inherit; cursor: pointer; text-align: left; transition: background-color .28s ease, color .28s ease; }
+    .group-name { display: flex; align-items: center; gap: 9px; font-size: 12px; font-weight: 730; }
+    .group-mark { display: grid; width: 26px; height: 26px; place-items: center; border-radius: 8px; background: var(--green-soft); color: var(--green-dark); font-size: 11px; transition: background-color .28s ease, color .28s ease, box-shadow .28s ease; }
+    .group-count { display: inline-flex; align-items: center; gap: 8px; color: #96a199; font-size: 10px; white-space: nowrap; }
+    .group-count svg { width: 15px; height: 15px; transition: transform .42s cubic-bezier(.2,.75,.25,1), color .28s ease; }
+    .group-head[aria-expanded="true"] .group-count svg { transform: rotate(180deg); }
+    .group-head[aria-expanded="true"] { border-bottom: 1px solid #edf1ed; }
+    .group-head:hover { background: #f3f8f4; }
+    .group-head:hover .group-mark { background: #dff0e3; box-shadow: 0 0 0 3px #21865c0d; }
+    .group-head[aria-expanded="true"] .group-mark { background: var(--green); color: #fff; }
+    .command-list { max-height: 0; overflow: hidden; padding: 0 12px; opacity: 0; visibility: hidden; transition: max-height .48s cubic-bezier(.2,.75,.25,1), opacity .28s ease, padding .38s cubic-bezier(.2,.75,.25,1), visibility 0s linear .48s; }
+    .command-list.is-open { padding-top: 5px; padding-bottom: 8px; opacity: 1; visibility: visible; transition-delay: 0s; }
+    .command-list-inner { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 10px; }
+    .command-item { display: flex; min-width: 0; align-items: center; justify-content: space-between; gap: 8px; min-height: 35px; padding: 4px 7px; border-bottom: 1px solid #f1f4f1; border-radius: 7px; background: transparent; transition: background-color .2s ease, border-color .2s ease; }
+    .command-item:hover { border-bottom-color: transparent; background: #f2f8f3; }
+    .command-item:nth-last-child(-n+2) { border-bottom-color: transparent; }
+    .command-name { overflow: hidden; color: #425148; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; transition: color .2s ease; }
+    .command-item:hover .command-name { color: var(--green-dark); }
+    .copy-button { display: grid; width: 27px; height: 27px; flex: 0 0 auto; place-items: center; border: 0; border-radius: 7px; background: transparent; color: #99a69d; cursor: pointer; transition: background-color .2s ease, color .2s ease, box-shadow .2s ease; }
+    .copy-button:hover { background: var(--green-soft); color: var(--green-dark); box-shadow: 0 0 0 3px #21865c0d; }
+    .copy-button svg { width: 14px; height: 14px; }
+    .empty-state { padding: 35px 15px; border: 1px dashed #dce7de; border-radius: 13px; color: var(--muted); text-align: center; font-size: 12px; }
+    .docs-intro { position: relative; z-index: 1; overflow: hidden; margin-bottom: -7px; padding: 23px 25px 27px; border: 1px solid #dcebe0; border-radius: 18px; background: linear-gradient(120deg, #f0f8f1, #fff 75%); box-shadow: 0 12px 30px #245c3c0a; }
+    .docs-intro h2 { margin: 8px 0; font-size: 22px; letter-spacing: -.04em; }
+    .docs-intro p { max-width: 700px; margin: 0; color: var(--muted); font-size: 12px; line-height: 1.75; }
+    .docs-section { margin: 24px 0; }
+    .docs-section h2 { margin: 0 0 7px; font-size: 17px; letter-spacing: -.03em; }
+    .docs-section > p { color: var(--muted); font-size: 11px; line-height: 1.7; }
+    .docs-section-heading { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 13px; }
+    .docs-section-heading h2 { margin: 6px 0; font-size: 22px; letter-spacing: -.04em; }
+    .docs-section-heading p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.65; }
+    .docs-guide-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .docs-guide-card { position: relative; overflow: hidden; min-width: 0; padding: 20px; border: 1px solid var(--line); border-radius: 15px; background: var(--surface); box-shadow: 0 8px 24px #245c3c08; transition: border-color .28s ease, box-shadow .28s ease, background-color .28s ease; animation: doc-card-arrive .42s cubic-bezier(.2,.75,.25,1) both; }
+    .docs-guide-card:hover { border-color: #b7d8c0; box-shadow: 0 12px 28px #245c3c12; }
+    .docs-guide-card:nth-child(2) { animation-delay: .06s; }
+    .docs-guide-card:nth-child(3) { animation-delay: .12s; }
+    .docs-guide-step { display: grid; width: 34px; height: 34px; place-items: center; margin-bottom: 16px; border-radius: 11px; background: var(--green-soft); color: var(--green-dark); font-size: 11px; font-weight: 800; }
+    .docs-guide-card h3 { margin: 0 0 8px; font-size: 15px; letter-spacing: -.025em; }
+    .docs-guide-card p, .docs-guide-detail p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.75; }
+    .docs-guide-card code, .docs-guide-detail code { padding: 2px 5px; border-radius: 5px; background: var(--green-soft); color: var(--green-dark); font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: .95em; }
+    .docs-guide-details { display: grid; gap: 9px; }
+    .docs-guide-detail { overflow: hidden; border: 1px solid var(--line); border-radius: 13px; background: var(--surface); transition: border-color .25s ease, box-shadow .25s ease; }
+    .docs-guide-detail[open] { border-color: #c5ddcb; box-shadow: 0 8px 22px #245c3c0a; }
+    .docs-guide-detail summary { position: relative; display: flex; min-height: 54px; align-items: center; justify-content: space-between; gap: 14px; padding: 13px 17px; color: var(--ink); cursor: pointer; font-size: 13px; font-weight: 700; list-style: none; }
+    .docs-guide-detail summary::-webkit-details-marker { display: none; }
+    .docs-guide-detail summary::after { width: 8px; height: 8px; flex: 0 0 auto; border-right: 1.5px solid var(--green); border-bottom: 1.5px solid var(--green); content: ""; transform: rotate(45deg) translateY(-2px); transition: transform .3s cubic-bezier(.2,.75,.25,1); }
+    .docs-guide-detail[open] summary::after { transform: rotate(225deg) translate(-2px, -1px); }
+    .docs-guide-detail > div { display: grid; max-height: 0; gap: 9px; overflow: hidden; padding: 0 17px; opacity: 0; transition: max-height .38s cubic-bezier(.2,.75,.25,1), opacity .25s ease, padding .3s ease; }
+    .docs-guide-detail[open] > div { max-height: 420px; padding-bottom: 16px; opacity: 1; }
+    .docs-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 11px; }
+    .docs-step, .docs-callout { padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: white; }
+    .docs-step strong { display: block; margin-bottom: 7px; font-size: 11px; }
+    .docs-step p { margin: 0; color: var(--muted); font-size: 10px; line-height: 1.65; }
+    .docs-step code, .docs-callout code, .doc-command code { padding: 2px 5px; border-radius: 5px; background: var(--green-soft); color: var(--green-dark); font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: .95em; }
+    .docs-callout { margin-top: 12px; border-color: #dcebe0; background: #f5faf6; color: #506357; font-size: 10px; line-height: 1.7; }
+    .inline-link { padding: 0; border: 0; background: transparent; color: var(--green-dark); cursor: pointer; font: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+    .docs-toolbar { display: flex; align-items: center; gap: 12px; margin: 0 0 14px; }
+    .docs-browser { position: relative; overflow: hidden; padding: 20px; border: 1px solid #47628f; border-radius: 19px; background: linear-gradient(135deg, #4d668f, #5575a5 58%, #718bb5); color: white; box-shadow: 0 18px 38px #4d668f33; }
+    .docs-browser::before { position: absolute; top: -110px; right: -50px; width: 290px; height: 290px; border: 1px solid #ffffff24; border-radius: 50%; box-shadow: 0 0 0 28px #ffffff0c, 0 0 0 58px #ffffff08; content: ""; pointer-events: none; }
+    .docs-browser .search-wrap { z-index: 1; }
+    .docs-browser .search-input { border-color: #ffffffb5; background: #fffffffa; }
+    .docs-category-hint { flex: 0 0 auto; color: #e7ecf7; font-size: 12px; font-weight: 650; }
+    .docs-category-grid { position: relative; display: grid; max-height: min(430px, 53vh); grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; overflow-y: auto; padding: 2px 5px 2px 2px; scrollbar-color: #ffffff72 #ffffff18; scrollbar-width: thin; }
+    .docs-category-button { display: grid; min-width: 0; min-height: 68px; grid-template-columns: 30px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 10px; border: 1px solid #ffffff3a; border-radius: 12px; background: #ffffff13; color: white; cursor: pointer; text-align: left; transition: border-color .28s ease, background-color .28s ease, color .28s ease, box-shadow .28s ease; animation: category-arrive .38s cubic-bezier(.2,.75,.25,1) both; }
+    .docs-category-button:nth-child(3n + 2) { animation-delay: .035s; }
+    .docs-category-button:nth-child(3n) { animation-delay: .07s; }
+    .docs-category-button:hover, .docs-category-button.selected { border-color: #ffffffb5; background: #ffffffed; color: #174c34; box-shadow: 0 8px 20px #06442a2b; }
+    .docs-category-icon { display: grid; width: 30px; height: 30px; place-items: center; border: 1px solid #ffffff3d; border-radius: 9px; background: #ffffff20; color: inherit; font-size: 10px; font-weight: 800; }
+    .docs-category-copy { display: grid; min-width: 0; gap: 4px; }
+    .docs-category-copy strong { overflow: hidden; font-size: 12px; font-weight: 730; text-overflow: ellipsis; white-space: nowrap; }
+    .docs-category-copy > span { display: -webkit-box; overflow: hidden; color: currentColor; font-size: 10px; line-height: 1.4; opacity: .76; -webkit-box-orient: vertical; -webkit-line-clamp: 1; line-clamp: 1; }
+    .docs-category-count { display: grid; min-width: 23px; height: 23px; place-items: center; border-radius: 7px; background: #ffffff24; font-size: 10px; font-weight: 750; }
+    .docs-category-arrow { display: none; }
+    .docs-results-panel { margin-top: 20px; animation: results-rise .32s cubic-bezier(.2,.75,.25,1) both; }
+    .docs-results-heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 12px; }
+    .docs-results-heading h2 { margin: 0; font-size: 20px; letter-spacing: -.035em; }
+    .docs-results-heading p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+    .docs-back-button, .docs-load-more { min-height: 38px; padding: 0 13px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); color: var(--green-dark); cursor: pointer; font-size: 12px; font-weight: 680; transition: border-color .28s ease, background-color .28s ease, box-shadow .28s ease, color .28s ease; }
+    .docs-back-button:hover, .docs-load-more:hover { border-color: #a4cfae; background: var(--green-soft); box-shadow: 0 5px 14px #245c3c12; }
+    .docs-command-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .docs-load-more { display: block; margin: 14px auto 0; }
+    @keyframes docs-paper-fold { 0%, 35% { transform: scale(1); opacity: 1; } 100% { transform: scale(.97) translateY(3px); opacity: .92; } }
+    @keyframes docs-tray-emerge { from { clip-path: inset(0 0 42%); opacity: 0; transform: translateY(-20px) scaleY(.82); } to { clip-path: inset(0); opacity: 1; transform: translateY(0) scaleY(1); } }
+    @keyframes category-arrive { from { opacity: 0; transform: translateY(9px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes results-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .page.active#page-docs .docs-intro { animation: docs-paper-fold .62s cubic-bezier(.2,.75,.25,1) both; }
+    .page.active#page-docs .docs-browser { transform-origin: top center; animation: docs-tray-emerge .7s cubic-bezier(.2,.75,.25,1) .08s both; }
+    .doc-command { min-width: 0; padding: 13px; border: 1px solid var(--line); border-radius: 12px; background: white; transition: border-color .28s ease, background-color .28s ease, box-shadow .28s ease; animation: doc-card-arrive .34s cubic-bezier(.2,.75,.25,1) both; }
+    .doc-command:nth-child(2) { animation-delay: .035s; }
+    .doc-command:nth-child(3) { animation-delay: .07s; }
+    .doc-command:nth-child(4) { animation-delay: .105s; }
+    .doc-command:nth-child(5) { animation-delay: .14s; }
+    .doc-command:nth-child(6) { animation-delay: .175s; }
+    .doc-command:hover { border-color: #c7dfce; box-shadow: 0 8px 24px #245c3c0b; }
+    @keyframes doc-card-arrive { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .doc-command-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .doc-command h3 { overflow: hidden; margin: 0; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 11px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+    .doc-category { color: var(--green); font-size: 9px; font-weight: 700; }
+    .doc-command p { margin: 9px 0; color: var(--muted); font-size: 10px; line-height: 1.6; }
+    .doc-usage { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .doc-usage-label { color: #98a39b; font-size: 9px; text-transform: uppercase; letter-spacing: .08em; }
+    .premium-overview { display: grid; gap: 20px; }
+    .premium-banner { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 22px; border: 1px solid #d8eadc; border-radius: 17px; background: linear-gradient(120deg, #edf8ef, #fff 76%); }
+    .premium-banner h2 { margin: 8px 0 6px; font-size: 20px; letter-spacing: -.04em; }
+    .premium-banner p { max-width: 560px; margin: 0; color: var(--muted); font-size: 11px; line-height: 1.7; }
+    .premium-banner img { width: 48px; height: 48px; flex: 0 0 auto; }
+    .premium-plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .premium-plan { position: relative; isolation: isolate; overflow: hidden; padding: 18px; border: 1px solid #d6e8da; border-radius: 14px; background: linear-gradient(135deg, #eff8f0, #f9fcf9 56%, #eaf5ec); transition: transform .32s cubic-bezier(.2,.75,.25,1), box-shadow .32s ease, border-color .32s ease; animation: plan-rise .65s cubic-bezier(.2,.75,.25,1) both; }
+    .premium-plan::before { position: absolute; inset: -45% -35%; z-index: -1; border-radius: 50%; background: radial-gradient(ellipse, #b5e3c166 0, #b5e3c100 62%); content: ""; opacity: .52; transform: translate3d(-14%, 12%, 0) scale(.82); animation: plan-glow 11s ease-in-out infinite alternate; }
+    .premium-plan::after { position: absolute; inset: 0; z-index: -1; background: linear-gradient(115deg, transparent 22%, #ffffff38 48%, transparent 70%); content: ""; opacity: .5; transform: translateX(-120%); animation: plan-sheen 9s ease-in-out infinite; }
+    .premium-plan > * { position: relative; }
+    .premium-plan:nth-child(2) { animation-delay: .1s; }
+    .premium-plan:nth-child(3) { animation-delay: .2s; }
+    .premium-plan:nth-child(2)::before { animation-delay: -3s; }
+    .premium-plan:nth-child(3)::before { animation-delay: -6s; }
+    .premium-plan:nth-child(2)::after { animation-delay: -3s; }
+    .premium-plan:nth-child(3)::after { animation-delay: -6s; }
+    .premium-plan:hover { transform: translateY(-4px) scale(1.012); border-color: #8fc7a0; box-shadow: 0 16px 35px #245c3c18; }
+    @keyframes plan-rise { from { opacity: 0; transform: translateY(17px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes plan-glow { from { transform: translate3d(-14%, 12%, 0) scale(.82); } to { transform: translate3d(20%, -9%, 0) scale(1.18); } }
+    @keyframes plan-sheen { 0%, 34% { transform: translateX(-120%); } 67%, 100% { transform: translateX(120%); } }
+    .premium-plan.featured { border-color: #8fc7a0; background: linear-gradient(145deg, #e5f4e8, #f5fbf6 53%, #e3f2e6); box-shadow: inset 0 0 0 1px #ffffffa1; }
+    .premium-plan.featured::before { opacity: .78; }
+    .premium-plan-label { color: var(--green); font-size: 10px; font-weight: 740; text-transform: uppercase; letter-spacing: .09em; }
+    .premium-price { display: block; margin: 11px 0 3px; color: var(--green-dark); font-size: 27px; font-weight: 790; letter-spacing: -.06em; transition: color .25s ease; }
+    @supports (-webkit-background-clip: text) or (background-clip: text) {
+      .premium-price { background: linear-gradient(105deg, var(--green-dark) 24%, #65b982 40%, #fff 50%, #51a872 60%, var(--green-dark) 76%); background-size: 220% 100%; background-position: 100% 50%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: price-shimmer 3.8s ease-in-out infinite; }
+    }
+    @keyframes price-shimmer { 0%, 18% { background-position: 100% 50%; } 72%, 100% { background-position: 0 50%; } }
+    .premium-period { color: var(--muted); font-size: 10px; }
+    .premium-plan p { margin: 12px 0 0; color: var(--muted); font-size: 10px; line-height: 1.6; }
+    .premium-redeem { display: flex; align-items: flex-start; gap: 13px; padding: 17px; border: 1px solid #d8eadc; border-radius: 13px; background: #f5faf6; }
+    .premium-redeem .stat-icon { flex: 0 0 auto; }
+    .premium-redeem h3 { margin: 1px 0 6px; font-size: 12px; }
+    .premium-redeem p { margin: 0; color: #637368; font-size: 10px; line-height: 1.7; }
+    .premium-redeem code { padding: 3px 6px; border-radius: 5px; background: #e4f1e7; color: var(--green-dark); font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .premium-command-group { overflow: hidden; border: 1px solid var(--line); border-radius: 13px; background: white; }
+    .premium-command-group + .premium-command-group { margin-top: 11px; }
+    .premium-command-group h3 { margin: 0; padding: 12px 15px; border-bottom: 1px solid #edf1ed; background: #fcfdfc; font-size: 11px; }
+    .premium-command-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; padding: 11px; }
+    .premium-command { min-width: 0; padding: 12px; border: 1px solid #edf1ed; border-radius: 10px; background: #fff; transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease; }
+    .premium-command:hover { border-color: #acd3b6; box-shadow: 0 8px 22px #245c3c0d; }
+    .premium-command p { margin: 8px 0 0; color: var(--muted); font-size: 10px; line-height: 1.6; }
+    .premium-command code { display: inline-block; max-width: calc(100% - 38px); padding: 6px 9px; border: 1px solid #cfe5d4; border-radius: 7px; background: #edf8ef; color: #146443; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 12px; font-weight: 720; line-height: 1.4; overflow-wrap: anywhere; vertical-align: middle; }
+    .premium-command .copy-button { float: right; }
+    .developers-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px; }
+    .developer-card { display: flex; align-items: center; gap: 13px; min-width: 0; padding: 15px; border: 1px solid var(--line); border-radius: 13px; background: #fff; transition: transform .2s, border-color .2s, box-shadow .2s; }
+    .developer-card:hover { transform: translateY(-2px); border-color: #c7dfce; box-shadow: 0 10px 24px #245c3c0c; }
+    .developer-avatar { display: grid; width: 43px; height: 43px; flex: 0 0 auto; place-items: center; border-radius: 15px; background: linear-gradient(145deg, #e7f5e9, #d7ecdd); color: var(--green-dark); font-size: 12px; font-weight: 800; }
+    .developer-meta { min-width: 0; flex: 1; }
+    .developer-meta strong, .developer-meta span { display: block; }
+    .developer-meta strong { font-size: 11px; }
+    .developer-meta span { overflow: hidden; margin-top: 4px; color: var(--muted); font-size: 9px; text-overflow: ellipsis; }
+    .developer-arrow { color: var(--green); font-size: 15px; }
+    .developer-page-intro { max-width: 720px; margin-bottom: 20px; color: var(--muted); font-size: 15px; line-height: 1.7; }
+    .developer-page-list { display: grid; gap: 14px; }
+    .developer-profile { display: flex; align-items: center; gap: 18px; padding: 20px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); transition: transform .28s cubic-bezier(.2,.75,.25,1), border-color .2s, box-shadow .2s; animation: plan-rise .65s cubic-bezier(.2,.75,.25,1) both; }
+    .developer-profile:nth-child(2) { animation-delay: .12s; }
+    .developer-profile:hover { transform: translateY(-2px); border-color: #b7d8c0; box-shadow: var(--shadow); }
+    .developer-profile-avatar { width: 74px; height: 74px; flex: 0 0 auto; border: 3px solid #e0f0e4; border-radius: 24px; object-fit: cover; background: linear-gradient(145deg, #e7f5e9, #d7ecdd); }
+    .developer-profile-avatar-fallback { display: grid; width: 74px; height: 74px; flex: 0 0 auto; place-items: center; border: 3px solid var(--line); border-radius: 24px; background: linear-gradient(145deg, var(--green-soft), var(--surface)); color: var(--green-dark); font-size: 20px; font-weight: 800; }
+    .developer-profile-info { min-width: 0; flex: 1; }
+    .developer-profile-info h2 { margin: 0; font-size: 20px; letter-spacing: -.04em; }
+    .developer-name { display: flex; align-items: center; gap: 8px; }
+    .developer-name-text { color: var(--ink); background: linear-gradient(105deg, var(--ink) 34%, #fff 49%, var(--ink) 64%); background-size: 240% 100%; background-position: 100% 50%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: developer-name-shimmer 4s ease-in-out infinite; }
+    @keyframes developer-name-shimmer { 0%, 20% { background-position: 100% 50%; } 75%, 100% { background-position: 0 50%; } }
+    .verified-badge { position: relative; display: inline-grid; width: 20px; height: 20px; flex: 0 0 auto; place-items: center; overflow: hidden; border-radius: 50%; background: linear-gradient(145deg, #347be7, #245fc5); box-shadow: 0 2px 8px #397de64d; }
+    .verified-badge::after { position: absolute; inset: -45% -70%; background: linear-gradient(105deg, transparent 42%, #ffffffb8 50%, transparent 58%); content: ""; pointer-events: none; animation: badge-sheen 3.2s ease-in-out infinite; }
+    .verified-badge svg { position: relative; z-index: 1; width: 12px; height: 12px; color: #fff; }
+    @keyframes badge-sheen { 0%, 22% { transform: translateX(-75%); } 72%, 100% { transform: translateX(75%); } }
+    .developer-profile-info p { margin: 5px 0 10px; color: var(--muted); font-size: 13px; }
+    .developer-profile-link { display: inline-flex; align-items: center; gap: 7px; margin-top: 12px; color: var(--green-dark); font-size: 13px; font-weight: 700; }
+    .developer-profile-link svg { width: 15px; height: 15px; flex: 0 0 auto; }
+    .developer-profile-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .review-panel { margin-top: 25px; padding: 22px; border: 1px solid var(--line); border-radius: 17px; background: var(--surface); box-shadow: 0 12px 32px #245c3c08; }
+    .review-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+    .review-heading h2 { margin: 7px 0 5px; font-size: 21px; letter-spacing: -.04em; }
+    .review-heading p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .review-mark { display: grid; width: 42px; height: 42px; flex: 0 0 auto; place-items: center; border-radius: 14px; background: var(--green-soft); color: #d89b20; font-size: 20px; }
+    .review-form { display: grid; gap: 13px; margin-top: 20px; }
+    .review-rating { min-width: 0; margin: 0; padding: 0; border: 0; }
+    .review-rating legend, .review-comment-label { margin-bottom: 8px; color: var(--ink); font-size: 12px; font-weight: 700; }
+    .review-stars { display: inline-flex; flex-direction: row-reverse; justify-content: flex-end; gap: 4px; }
+    .review-stars input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; clip-path: inset(50%); }
+    .review-stars label { display: grid; width: 38px; height: 38px; place-items: center; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); color: #b7c0b9; cursor: pointer; font-size: 22px; transition: color .2s ease, background-color .2s ease, border-color .2s ease, transform .2s ease; }
+    .review-stars label:hover, .review-stars label:hover ~ label, .review-stars input:checked ~ label { border-color: #efd48b; background: #fff8e5; color: #d89b20; }
+    .review-stars label:hover { transform: scale(1.06); }
+    .review-stars input:focus-visible + label { outline: 3px solid #83c99b; outline-offset: 2px; }
+    .review-comment-label { display: flex; justify-content: space-between; gap: 10px; margin: 0; }
+    .review-comment-label span { color: var(--muted); font-weight: 500; }
+    .review-form textarea { width: 100%; min-height: 88px; resize: vertical; padding: 12px 13px; border: 1px solid var(--line); border-radius: 11px; outline: none; background: var(--canvas); color: var(--ink); font: inherit; font-size: 13px; line-height: 1.6; transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease; }
+    .review-form textarea:focus { border-color: #86bd98; box-shadow: 0 0 0 3px #21865c12; }
+    .review-form-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .review-form-footer p { max-width: 480px; margin: 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
+    .review-form-footer .button-primary { flex: 0 0 auto; }
+    .review-form-footer .button-primary:disabled { cursor: not-allowed; opacity: .58; transform: none; }
+    .review-status { min-height: 0; margin: 0; color: var(--green-dark); font-size: 12px; }
+    .review-status:empty { display: none; }
+    .review-dashboard { display: grid; gap: 17px; margin-top: 22px; }
+    .review-stats { display: grid; grid-template-columns: minmax(150px, .75fr) minmax(0, 1.25fr); gap: 16px; }
+    .review-stat-card, .review-chart-card, .review-comments-card { min-width: 0; padding: 17px; border: 1px solid var(--line); border-radius: 13px; background: var(--canvas); }
+    .review-average { display: flex; align-items: baseline; gap: 8px; }
+    .review-average strong { color: var(--green-dark); font-size: 36px; letter-spacing: -.06em; }
+    .review-average span, .review-stat-label, .review-chart-card p { color: var(--muted); font-size: 11px; }
+    .review-stat-label { margin: 5px 0 12px; }
+    .rating-distribution { display: grid; gap: 6px; }
+    .rating-row { display: grid; grid-template-columns: 25px minmax(0, 1fr) 24px; align-items: center; gap: 7px; color: var(--muted); font-size: 10px; }
+    .rating-track { height: 7px; overflow: hidden; border-radius: 8px; background: var(--line); }
+    .rating-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, #f3a4cf, #eb5caa); transition: width .35s ease; }
+    .review-chart-card h3, .review-comments-card h3 { margin: 0; color: var(--ink); font-size: 13px; }
+    .review-chart-card p { margin: 5px 0 14px; }
+    .rating-chart { display: grid; min-height: 126px; grid-template-columns: repeat(14, minmax(0, 1fr)); align-items: end; gap: 6px; }
+    .rating-day { display: grid; min-width: 0; height: 116px; grid-template-rows: minmax(0, 1fr) 17px; justify-items: center; gap: 5px; }
+    .rating-day-bar { display: flex; width: 100%; height: 100%; align-items: end; overflow: hidden; border-radius: 6px 6px 3px 3px; background: var(--green-soft); }
+    .rating-day-bar span { display: block; width: 100%; min-height: 0; border-radius: 6px 6px 3px 3px; background: linear-gradient(0deg, var(--pink-dark), var(--pink)); transition: height .4s cubic-bezier(.2,.75,.25,1); }
+    .rating-day time { color: var(--muted); font-size: 9px; }
+    .review-comment-list { display: grid; gap: 9px; margin-top: 12px; }
+    .review-comment-card { padding: 13px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+    .review-comment-meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; color: var(--muted); font-size: 10px; }
+    .review-comment-stars { color: #d84591; letter-spacing: .06em; }
+    .review-comment-card p { margin: 8px 0 0; color: var(--ink); font-size: 12px; line-height: 1.65; overflow-wrap: anywhere; white-space: pre-wrap; }
+    .review-load-more { display: block; margin: 13px auto 0; padding: 9px 13px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); color: var(--green-dark); cursor: pointer; font-size: 11px; font-weight: 700; }
+    .review-load-more:hover { border-color: var(--pink); background: var(--green-soft); }
+    .review-empty { margin: 12px 0 0; color: var(--muted); font-size: 12px; }
+    .page-footer { padding: 23px 0 0; color: #9ba69e; text-align: center; font-size: 10px; }
+    .page-footer strong { color: #64746a; font-weight: 650; }
+    .toast { position: fixed; right: 24px; bottom: 23px; z-index: 10; display: flex; align-items: center; gap: 9px; padding: 11px 15px; border: 1px solid #dcece0; border-radius: 11px; background: white; color: #315642; box-shadow: var(--shadow); font-size: 11px; font-weight: 650; opacity: 0; pointer-events: none; transform: translateY(8px); transition: .2s; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast svg { width: 16px; height: 16px; color: var(--green); }
+    .mobile-menu { display: none; }
+    .nav-label { font-size: 11px; }
+    .nav-button { font-size: 14px; }
+    .crumb { font-size: 14px; }
+    .invite-small { font-size: 13px; }
+    .eyebrow { font-size: 11px; }
+    .section-head h2 { font-size: 21px; }
+    .section-head p, .hero-copy > p { font-size: 15px; }
+    .stat-value { font-size: 22px; }
+    .stat-label { font-size: 12px; }
+    .feature-card { padding: 15px; }
+    .feature-card strong { font-size: 14px; }
+    .feature-card span { font-size: 12px; }
+    .button-primary, .button-secondary { min-height: 44px; padding-right: 17px; padding-left: 17px; font-size: 13px; }
+    .page-title h1 { font-size: 36px; }
+    .page-title p { font-size: 15px; }
+    .search-input, .category-picker-trigger { height: 46px; font-size: 14px; }
+    .command-summary { font-size: 12px; }
+    .group-name { font-size: 14px; }
+    .group-count { font-size: 12px; }
+    .command-name { font-size: 12px; }
+    .command-item { min-height: 41px; }
+    .docs-intro h2 { font-size: 27px; }
+    .docs-intro p, .docs-section > p { font-size: 14px; }
+    .docs-section h2 { font-size: 21px; }
+    .docs-step strong { font-size: 14px; }
+    .docs-step p, .docs-callout { font-size: 13px; }
+    .doc-command h3 { font-size: 13px; }
+    .doc-command p { font-size: 13px; }
+    .doc-category, .doc-usage-label { font-size: 11px; }
+    .premium-banner h2 { font-size: 26px; }
+    .premium-banner p { font-size: 14px; }
+    .premium-plan-label, .premium-period { font-size: 12px; }
+    .premium-price { font-size: 32px; }
+    .premium-plan p, .premium-redeem p, .premium-command p { font-size: 13px; }
+    .premium-redeem h3, .premium-command-group h3 { font-size: 14px; }
+    .premium-command code { font-size: 12px; }
+    .developer-meta strong { font-size: 14px; }
+    .developer-meta span { font-size: 12px; }
+    .support-banner h3 { font-size: 16px; }
+    .support-banner p { font-size: 13px; }
+    .brand-caption { font-size: 12px; }
+    .support-link { font-size: 13px; }
+    .empty-state { font-size: 14px; }
+    .page-footer { font-size: 12px; }
+    :root[data-theme="dark"] .brand-mark { border-color: #594052; background: #332532; }
+    :root[data-theme="dark"] .topbar { border-color: #39313dd9; background: #141218ed; }
+    :root[data-theme="dark"] .nav-button { color: #c8becb; }
+    :root[data-theme="dark"] .nav-button:hover { background: #302637; color: var(--green-dark); }
+    :root[data-theme="dark"] .side-support,
+    :root[data-theme="dark"] .docs-intro,
+    :root[data-theme="dark"] .premium-banner,
+    :root[data-theme="dark"] .premium-redeem,
+    :root[data-theme="dark"] .docs-callout { border-color: #493747; background: linear-gradient(125deg, #29222d, #1e1b22 85%); color: #d4cbd6; }
+    :root[data-theme="dark"] .hero { border-color: #493747; background: linear-gradient(115deg, #302637, #29222d 55%, #382c3b); }
+    :root[data-theme="dark"] .hero-copy > p,
+    :root[data-theme="dark"] .side-support p,
+    :root[data-theme="dark"] .premium-redeem p { color: #b9afbd; }
+    :root[data-theme="dark"] .hero::after { border-color: #ffffff24; box-shadow: 0 0 0 33px #ffffff0d, 0 0 0 68px #ffffff08; }
+    :root[data-theme="dark"] .docs-browser { border-color: #594052; background: linear-gradient(135deg, #29222d, #493047 58%, #332532); box-shadow: 0 18px 38px #00000033; }
+    :root[data-theme="dark"] .docs-category-hint { color: #f0c9df; }
+    :root[data-theme="dark"] .stat-icon { background: #302637; color: var(--green-dark); }
+    :root[data-theme="dark"] .button-secondary,
+    :root[data-theme="dark"] .stat-card,
+    :root[data-theme="dark"] .feature-card,
+    :root[data-theme="dark"] .support-banner,
+    :root[data-theme="dark"] .search-input,
+    :root[data-theme="dark"] .category-picker-trigger,
+    :root[data-theme="dark"] .category-picker-menu,
+    :root[data-theme="dark"] .command-group,
+    :root[data-theme="dark"] .docs-step,
+    :root[data-theme="dark"] .doc-command,
+    :root[data-theme="dark"] .premium-command-group,
+    :root[data-theme="dark"] .premium-command,
+    :root[data-theme="dark"] .developer-card,
+    :root[data-theme="dark"] .developer-profile,
+    :root[data-theme="dark"] .toast,
+    :root[data-theme="dark"] .theme-toggle { border-color: var(--line); background: var(--surface); color: var(--ink); }
+    :root[data-theme="dark"] .premium-plan { border-color: #594052; background: linear-gradient(135deg, #302637, #26202b 56%, #382b3a); color: var(--ink); }
+    :root[data-theme="dark"] .premium-plan::before { background: radial-gradient(ellipse, #e883b852 0, #e883b800 62%); }
+    :root[data-theme="dark"] .premium-plan::after { background: linear-gradient(115deg, transparent 22%, #f0a5ce1c 48%, transparent 70%); }
+    :root[data-theme="dark"] .premium-plan.featured { border-color: #80536f; background: linear-gradient(145deg, #493047, #302637 53%, #513449); box-shadow: inset 0 0 0 1px #f0a5ce1c; }
+    :root[data-theme="dark"] .premium-command-group h3,
+    :root[data-theme="dark"] .group-head { border-color: var(--line); background: #26202b; }
+    :root[data-theme="dark"] .premium-command code { border-color: #68485f; background: #382b3a; color: #f0a5ce; }
+    :root[data-theme="dark"] .command-name,
+    :root[data-theme="dark"] .group-name,
+    :root[data-theme="dark"] .command-summary strong { color: #e8dfe9; }
+    :root[data-theme="dark"] .command-item { border-color: #342d38; }
+    :root[data-theme="dark"] .button-secondary:hover { border-color: #80536f; background: #302637; }
+    :root[data-theme="dark"] .page-footer strong { color: #d1c3d2; }
+    :root[data-theme="pink"] .topbar { border-color: #f1dbe8d9; background: #fffafdED; }
+    :root[data-theme="pink"] .nav-button { color: #80647a; }
+    :root[data-theme="pink"] .nav-button:hover { background: #fff0f8; color: var(--green-dark); }
+    :root[data-theme="pink"] .side-support,
+    :root[data-theme="pink"] .docs-intro,
+    :root[data-theme="pink"] .premium-banner,
+    :root[data-theme="pink"] .premium-redeem,
+    :root[data-theme="pink"] .docs-callout { border-color: #f2cce1; background: linear-gradient(125deg, #fff0f8, #fffafd 85%); color: var(--ink); }
+    :root[data-theme="pink"] .hero { border-color: #efc5dc; background: linear-gradient(115deg, #ffe9f4, #fff3fa 55%, #f9e3f0); }
+    :root[data-theme="pink"] .hero::after { border-color: #a8297024; box-shadow: 0 0 0 33px #a8297010, 0 0 0 68px #a8297008; }
+    :root[data-theme="pink"] .button-secondary,
+    :root[data-theme="pink"] .stat-card,
+    :root[data-theme="pink"] .feature-card,
+    :root[data-theme="pink"] .support-banner,
+    :root[data-theme="pink"] .search-input,
+    :root[data-theme="pink"] .category-picker-trigger,
+    :root[data-theme="pink"] .category-picker-menu,
+    :root[data-theme="pink"] .command-group,
+    :root[data-theme="pink"] .docs-step,
+    :root[data-theme="pink"] .doc-command,
+    :root[data-theme="pink"] .premium-command-group,
+    :root[data-theme="pink"] .premium-command,
+    :root[data-theme="pink"] .developer-card,
+    :root[data-theme="pink"] .developer-profile,
+    :root[data-theme="pink"] .review-panel,
+    :root[data-theme="pink"] .review-stat-card,
+    :root[data-theme="pink"] .review-chart-card,
+    :root[data-theme="pink"] .review-comments-card,
+    :root[data-theme="pink"] .review-comment-card,
+    :root[data-theme="pink"] .toast,
+    :root[data-theme="pink"] .theme-toggle { border-color: var(--line); background: var(--surface); color: var(--ink); }
+    :root[data-theme="pink"] .premium-plan { border-color: #f0c6dc; background: linear-gradient(135deg, #fff0f8, #fffafd 56%, #fde9f4); color: var(--ink); }
+    :root[data-theme="pink"] .premium-plan::before { background: radial-gradient(ellipse, #f4a8d055 0, #f4a8d000 62%); }
+    :root[data-theme="pink"] .premium-plan::after { background: linear-gradient(115deg, transparent 22%, #ffffff88 48%, transparent 70%); }
+    :root[data-theme="pink"] .premium-plan.featured { border-color: #df88b8; background: linear-gradient(145deg, #ffe5f2, #fff4fa 53%, #fbddec); }
+    :root[data-theme="pink"] .premium-command-group h3,
+    :root[data-theme="pink"] .group-head { border-color: var(--line); background: #fff5fa; }
+    :root[data-theme="pink"] .premium-command code { border-color: #efc1da; background: #fff0f8; color: var(--pink-dark); }
+    :root[data-theme="pink"] .command-name,
+    :root[data-theme="pink"] .group-name,
+    :root[data-theme="pink"] .command-summary strong { color: var(--pink-dark); }
+    :root[data-theme="pink"] .command-item { border-color: #f5e3ed; }
+    :root[data-theme="pink"] .button-secondary:hover { border-color: #e48bb9; background: #fff0f8; }
+    :root[data-theme="pink"] .docs-browser { border-color: #e3a5c7; background: linear-gradient(135deg, #d84d98, #a92972 65%, #80245f); }
+    :root[data-theme="pink"] .review-stars label:hover,
+    :root[data-theme="pink"] .review-stars label:hover ~ label,
+    :root[data-theme="pink"] .review-stars input:checked ~ label { border-color: #f0a8ce; background: #fff0f8; color: #d84591; }
+    :root[data-theme="pink"] .review-form textarea:focus { border-color: #dc6aa5; box-shadow: 0 0 0 3px #eb5caa1c; }
+    :root[data-theme="pink"] .page-footer strong { color: var(--pink-dark); }
+    @media (max-width: 900px) {
+      .sidebar { width: 232px; padding: 22px 13px 17px; }
+      .main { margin-left: 232px; }
+      .topbar { padding: 0 24px; }
+      .content { padding: 28px 24px 24px; }
+      .feature-grid { grid-template-columns: repeat(3, 1fr); }
+      .docs-category-grid, .docs-guide-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .hero-bot { right: 2%; opacity: .75; }
+    }
+    @media (max-width: 760px) {
+      .sidebar { position: static; width: 100%; height: auto; padding: 12px 15px 10px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .brand { padding: 0 2px 12px; }
+      .brand-mark { width: 36px; height: 36px; border-radius: 12px; }
+      .nav-label, .sidebar-spacer, .side-support, .sidebar-foot { display: none; }
+      .nav { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; }
+      .nav-button { justify-content: center; gap: 7px; min-width: 0; min-height: 42px; padding: 8px 4px; font-size: 12px; text-align: center; overflow-wrap: anywhere; }
+      .nav-button svg { width: 17px; height: 17px; }
+      .main { margin-left: 0; }
+      .topbar { position: static; min-height: 58px; height: auto; padding: 9px 14px; gap: 8px; }
+      .crumb { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .top-actions { flex: 0 0 auto; }
+      .content { padding: 20px 15px 26px; }
+      .hero { padding: 27px 22px; }
+      .hero-copy { max-width: 100%; }
+      .hero-copy > p { max-width: 100%; padding-right: 26px; font-size: 14px; }
+      .hero-bot { right: -88px; bottom: -93px; opacity: .18; }
+      .hero h1 { font-size: 42px; }
+      .stats-grid { gap: 8px; }
+      .stat-card { min-height: 69px; gap: 8px; padding: 10px 8px; }
+      .stat-icon { width: 30px; height: 30px; }
+      .stat-value { font-size: 17px; }
+      .stat-label { font-size: 11px; }
+      .feature-grid { grid-template-columns: repeat(2, 1fr); }
+      .support-banner { align-items: flex-start; flex-direction: column; }
+      .page-title { align-items: flex-start; flex-direction: column; }
+      .page-title h1 { font-size: 30px; }
+      .command-toolbar { flex-direction: column; }
+      .category-picker { width: 100%; }
+      .category-picker-trigger { width: 100%; height: 40px; }
+      .command-list-inner { grid-template-columns: 1fr; }
+      .command-item:nth-last-child(-n+2) { border-bottom-color: #f1f4f1; }
+      .command-item:last-child { border-bottom-color: transparent; }
+      .docs-steps, .docs-command-list { grid-template-columns: 1fr; }
+      .docs-toolbar { align-items: stretch; flex-direction: column; }
+      .docs-category-hint { padding-left: 2px; }
+      .docs-category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .docs-guide-grid { grid-template-columns: 1fr; }
+      .docs-section-heading h2 { font-size: 20px; }
+      .premium-plans, .premium-command-list, .developers-grid { grid-template-columns: 1fr; }
+      .premium-banner { align-items: flex-start; }
+      .premium-banner img { width: 36px; height: 36px; }
+      .top-actions { gap: 7px; }
+      .theme-toggle { min-height: 38px; padding: 0 9px; font-size: 0; }
+      .theme-toggle svg { width: 19px; height: 19px; }
+      .invite-small { min-height: 38px; padding: 8px 10px; font-size: 12px; }
+      .page-title { gap: 8px; margin-bottom: 18px; }
+      .page-title h1 { font-size: 30px; }
+      .page-title p { font-size: 14px; }
+      .command-summary { align-items: flex-start; flex-direction: column; }
+      .developer-profile { align-items: flex-start; gap: 13px; padding: 15px; }
+      .developer-profile-avatar { width: 60px; height: 60px; border-radius: 19px; }
+      .review-panel { padding: 17px; }
+      .review-heading h2 { font-size: 19px; }
+      .review-form-footer { align-items: stretch; flex-direction: column; }
+      .review-form-footer .button-primary { width: 100%; }
+      .review-stats { grid-template-columns: 1fr; }
+      .rating-chart { gap: 3px; }
+      .page-title, .review-heading, .review-form-footer { min-width: 0; }
+      .review-heading { flex-wrap: wrap; }
+      .hero-actions { flex-wrap: wrap; }
+    }
+    @media (max-width: 380px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .stat-card { min-height: 62px; padding: 12px; }
+      .hero-bot { display: none; }
+      .hero-copy > p { padding-right: 0; }
+      .nav-button { flex-direction: column; gap: 4px; font-size: 11px; line-height: 1.2; }
+      .support-actions { width: 100%; flex-direction: column; }
+      .support-actions > * { width: 100%; }
+    }
+    .nav-button:active, .button-primary:active, .button-secondary:active, .invite-small:active, .theme-toggle:active { transform: scale(.97); }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-delay: 0ms !important; transition-duration: .01ms !important; }
+      .intro-splash { display: none; }
+      .ambient-canvas, .cursor-trail { display: none; }
+    }
+    .category-picker-trigger:focus-visible, .category-picker-option:focus-visible, .group-head:focus-visible,
+    .docs-category-button:focus-visible, .docs-back-button:focus-visible, .docs-load-more:focus-visible {
+      outline: 3px solid #83c99b;
+      outline-offset: 2px;
+    }
+    .category-picker-menu { overscroll-behavior: contain; }
+    .group-head:hover { background: #f3f8f4; }
+    .docs-browser .search-input { box-shadow: 0 5px 16px #10462e1c; }
+    .docs-category-button:active { transform: scale(.985); }
+    .docs-results-panel[hidden] { display: none; }
+    :root[data-theme="dark"] .group-head:hover { background: #352a38; }
+    :root[data-theme="dark"] .command-item:hover { background: #302637; }
+    :root[data-theme="dark"] .docs-category-button { border-color: #ffffff38; background: #ffffff12; color: #f4edf5; }
+    :root[data-theme="dark"] .docs-category-button:hover,
+    :root[data-theme="dark"] .docs-category-button.selected { border-color: #f0a5ce; background: #493047; color: #ffe5f4; }
+    :root[data-theme="dark"] .docs-back-button,
+    :root[data-theme="dark"] .docs-load-more { border-color: var(--line); background: var(--surface); color: var(--green-dark); }
+    @media (max-width: 760px) {
+      .docs-browser { padding: 15px; }
+      .docs-category-grid { max-height: min(410px, 50vh); gap: 7px; }
+      .docs-category-button { min-height: 64px; gap: 7px; padding: 8px; }
+      .docs-category-copy strong { font-size: 11px; }
+      .docs-category-copy > span { font-size: 9px; }
+      .docs-results-heading h2 { font-size: 18px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .page.active#page-docs .docs-intro,
+      .page.active#page-docs .docs-browser,
+      .docs-category-button,
+      .docs-results-panel { animation: none !important; }
+    }
+
+  </style>
+
+</head>
+<body>
+  <canvas class="ambient-canvas" id="ambient-canvas" aria-hidden="true"></canvas>
+  <canvas class="cursor-trail" id="cursor-trail" aria-hidden="true"></canvas>
+  <div class="intro-splash" aria-hidden="true">
+    <div class="intro-mark"><img src="madoka-avatar.gif" alt=""></div>
+    <div class="intro-name">Madoka</div>
+    <div class="intro-line"></div>
+  </div>
+  <svg aria-hidden="true" width="0" height="0" class="svg-sprite">
+    <symbol id="i-bot" viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="13" rx="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 3v4M8.5 12h.01M15.5 12h.01M9 16h6M2 11v5m20-5v5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-command" viewBox="0 0 24 24"><path d="M9 7a3 3 0 1 1-3-3h3v6H6a3 3 0 1 0 3 3zm6 0a3 3 0 1 0 3-3h-3v6h3a3 3 0 1 1-3 3zm-6 6v3a3 3 0 1 1-3-3h3zm6 0v3a3 3 0 1 0 3-3h-3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="i-pulse" viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-command-square" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8 9h8M8 13h5M8 17h8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2m16 0v-2a4 4 0 0 0-3-3.87M14 3.13a4 4 0 0 1 0 7.75" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="10" cy="7" r="4" fill="none" stroke="currentColor" stroke-width="1.7"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 2.5 17.4A2 2 0 0 0 4.2 20h15.6a2 2 0 0 0 1.7-2.6L13.7 3.9a2 2 0 0 0-3.4 0Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 9v4m0 3h.01" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.5 15.2A8.6 8.6 0 0 1 8.8 3.5 8.7 8.7 0 1 0 20.5 15.2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="m12 2 1.9 6.1L20 10l-6.1 1.9L12 18l-1.9-6.1L4 10l6.1-1.9L12 2Zm7 13 .9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-discord" viewBox="0 0 24 24"><path d="M19.7 5.1A18 18 0 0 0 15.3 3l-.6 1.2a16 16 0 0 0-5.4 0L8.7 3a18 18 0 0 0-4.4 2.1C1.5 9.2.7 13.2 1.1 17.2a18 18 0 0 0 5.4 2.7l1.2-2a11 11 0 0 1-1.9-.9l.5-.4a13 13 0 0 0 11.4 0l.5.4a11 11 0 0 1-1.9.9l1.2 2a18 18 0 0 0 5.4-2.7c.5-4.7-.8-8.7-3.2-12.1ZM8.8 14.4c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2Zm6.4 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2Z" fill="currentColor"/></symbol>
+  </svg>
+  <div class="app">
+    <aside class="sidebar">
+      <a class="brand" href="#home" data-goto="home" aria-label="Madoka home">
+        <span class="brand-mark"><img src="madoka-avatar.gif" alt=""></span>
+        <span><span class="brand-name">Madoka</span><span class="brand-caption">Discord Bot</span></span>
+      </a>
+      <div class="nav-label">Explore</div>
+      <nav class="nav" aria-label="Main navigation">
+        <button class="nav-button active" type="button" data-page="home"><svg><use href="#i-home"></use></svg>Home</button>
+        <button class="nav-button" type="button" data-page="docs"><svg><use href="#i-command-square"></use></svg>Docs</button>
+        <button class="nav-button" type="button" data-page="commands"><svg><use href="#i-command"></use></svg>Commands</button>
+        <button class="nav-button" type="button" data-page="premium"><svg><use href="#i-shield"></use></svg>Premium</button>
+        <button class="nav-button" type="button" data-page="developers"><svg><use href="#i-users"></use></svg>Madoka Developers</button>
+      </nav>
+      <div class="sidebar-spacer"></div>
+      <div class="side-support">
+        <div class="side-support-title"><span class="support-dot"></span>Need a hand?</div>
+        <p>Join the Virtus X Devs community for help and updates.</p>
+        <a class="support-link" href="https://discord.gg/QXfWH52nM" target="_blank" rel="noopener noreferrer">Join our Discord <svg><use href="#i-arrow"></use></svg></a>
+      </div>
+      <div class="sidebar-foot">Made for your community</div>
+    </aside>
+    <main class="main">
+      <header class="topbar">
+        <div class="crumb">Madoka <span aria-hidden="true">/</span> <strong id="crumb-page">Home</strong></div>
+        <div class="top-actions">
+          <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false"><svg aria-hidden="true"><use href="#i-sun"></use></svg><span>Dark mode</span></button>
+          <a class="invite-small" href="https://discord.com/oauth2/authorize?client_id=1555693618373853305&amp;permissions=8&amp;integration_type=0&amp;scope=bot" target="_blank" rel="noopener noreferrer"><svg><use href="#i-discord"></use></svg>Invite bot</a>
+        </div>
+      </header>
+      <div class="content">
+        <section class="page active" id="page-home" aria-labelledby="home-title">
+          <div class="hero">
+            <div class="hero-copy">
+              <div class="eyebrow"><svg><use href="#i-bot"></use></svg>Your all-in-one Discord bot</div>
+              <h1 id="home-title">Meet <span>Madoka.</span></h1>
+              <p>Madoka is an all-in-one Discord bot for server security, automoderation, music, games, and community tools—all in one place.</p>
+              <div class="hero-actions">
+                <a class="button-primary" href="https://discord.com/oauth2/authorize?client_id=1555693618373853305&amp;permissions=8&amp;integration_type=0&amp;scope=bot" target="_blank" rel="noopener noreferrer"><svg><use href="#i-discord"></use></svg>Add Madoka to Discord</a>
+                <button class="button-secondary" type="button" data-goto="commands"><svg><use href="#i-command"></use></svg>Explore commands</button>
+              </div>
+            </div>
+            <div class="hero-bot" aria-hidden="true"><div class="hero-bot-inner"><img src="madoka-avatar.gif" alt=""></div></div>
+          </div>
+          <div class="section-head">
+            <div><div class="eyebrow">At a glance</div><h2>Built for your server</h2></div>
+            <p>Useful tools and features from one Discord bot.</p>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-card"><span class="stat-icon"><svg><use href="#i-command-square"></use></svg></span><span><span class="stat-value" id="total-command-count">0</span><span class="stat-label">Total commands</span></span></div>
+            <div class="stat-card"><span class="stat-icon"><svg><use href="#i-shield"></use></svg></span><span><span class="stat-value">16</span><span class="stat-label">Main feature areas</span></span></div>
+            <div class="stat-card"><span class="stat-icon"><svg><use href="#i-users"></use></svg></span><span><span class="stat-value">Prefix <span class="prefix-mark">&gt;</span></span><span class="stat-label">Default prefix</span></span></div>
+          </div>
+          <div class="section-head">
+            <div><div class="eyebrow">What Madoka can do</div><h2>Main features</h2></div>
+          </div>
+          <div class="feature-grid" id="main-features"></div>
+          <div class="section-head">
+            <div><div class="eyebrow">And there's more</div><h2>Extra features</h2></div>
+          </div>
+          <div class="feature-grid" id="extra-features"></div>
+          <div class="support-banner">
+            <div><h3>Need help with the Discord bot?</h3><p>Contact a developer for support, bug reports, or Premium, or join Virtus X Devs for help and updates.</p></div>
+            <div class="support-actions"><button class="button-secondary" type="button" data-goto="developers">Contact developers</button><a class="button-secondary" href="https://discord.gg/QXfWH52nM" target="_blank" rel="noopener noreferrer"><svg><use href="#i-discord"></use></svg>Join Virtus X Devs</a></div>
+          </div>
+        </section>
+        <section class="page" id="page-docs" aria-labelledby="docs-title">
+          <div class="page-title">
+            <div><div class="eyebrow"><svg><use href="#i-command-square"></use></svg>Madoka Discord bot</div><h1 id="docs-title">Docs, made simple.</h1><p>Choose a category to browse Madoka Discord bot commands and learn how to use them.</p></div>
+          </div>
+          <div class="docs-intro">
+            <div class="eyebrow">Quick start</div>
+            <h2>One prefix. Plenty to explore.</h2>
+            <p>Madoka is a Discord bot that helps with server safety, moderation, music, and community tools. Its default prefix is <code>&gt;</code>. Server administrators can change it with <code>setprefix !</code>; the exclamation mark is only an example. Slash commands can also be available in Discord's command menu.</p>
+          </div>
+          <section class="docs-section docs-guide" aria-labelledby="docs-start-title">
+            <div class="docs-section-heading"><div><div class="eyebrow">Start here</div><h2 id="docs-start-title">Set up Madoka in your server</h2><p>A quick, safe checklist to help your community get started.</p></div></div>
+            <div class="docs-guide-grid">
+              <article class="docs-guide-card"><span class="docs-guide-step">01</span><h3>Invite the bot</h3><p>Use the Invite bot button and choose the Discord server where you have permission to add bots. Review the requested permissions before confirming.</p></article>
+              <article class="docs-guide-card"><span class="docs-guide-step">02</span><h3>Choose a command channel</h3><p>Make sure Madoka can view the channel and send messages there. For moderation or setup actions, the bot and the person running the command also need the relevant Discord permissions.</p></article>
+              <article class="docs-guide-card"><span class="docs-guide-step">03</span><h3>Try a command</h3><p>Try <code>&gt;ping</code> or browse the categories below. Use the server's active prefix; <code>setprefix !</code> shows how an administrator could switch to <code>!</code>.</p></article>
+            </div>
+          </section>
+          <section class="docs-section docs-guide-details" aria-label="Madoka setup and help">
+            <details class="docs-guide-detail">
+              <summary>Permissions, roles, and server safety</summary>
+              <div><p>Discord controls what Madoka can do. Give it only the permissions its enabled features need, and keep its role below roles it should not manage. Commands such as ban, kick, channel locking, and role management depend on both Discord permissions and the bot role's position.</p><p>Use destructive actions carefully, review the target before confirming, and avoid sharing private tokens or account credentials. If a command is denied, check the bot's channel access, role position, and the permissions of the person running it.</p></div>
+            </details>
+            <details class="docs-guide-detail">
+              <summary>Prefix and slash commands</summary>
+              <div><p>The default prefix shown for Madoka is <code>&gt;</code>. A server administrator can change it with <code>setprefix !</code>; <code>!</code> is just an example, and your server may use a different prefix afterward. Put the active prefix directly before a prefix command, such as <code>&gt;help</code> with the default.</p><p>Slash commands are selected from Discord's built-in command menu and do not need a message prefix. Availability can depend on the command and server configuration.</p></div>
+            </details>
+            <details class="docs-guide-detail">
+              <summary>Music and voice troubleshooting</summary>
+              <div><p>For music commands, join the voice channel first and check that Madoka can view and connect to it. If playback or a command does not work, confirm the bot is online, the channel permissions allow it, and the command is available to your server.</p><p>Some features require additional Discord permissions or server setup. Check the relevant category guide and ask in the support server if the issue continues.</p></div>
+            </details>
+            <details class="docs-guide-detail">
+              <summary>Where to get help</summary>
+              <div><p>Use the command search and category browser below to look up documented commands. For a bug report, include what you tried, the server/channel context, and any error message—but do not post passwords, bot tokens, or other secrets.</p><p>For help from the team, visit Madoka Developers or join the Virtus X Devs community using the links on this site.</p></div>
+            </details>
+          </section>
+          <section class="docs-browser" aria-label="Browse documentation categories">
+            <div class="docs-toolbar">
+              <label class="search-wrap"><svg><use href="#i-search"></use></svg><input class="search-input" id="docs-search" type="search" placeholder="Find a category or command..." autocomplete="off" aria-label="Search documentation"></label>
+              <span class="docs-category-hint">Choose a category</span>
+            </div>
+            <div class="docs-category-grid" id="docs-category-grid" aria-label="Documentation categories"></div>
+          </section>
+          <section class="docs-results-panel" id="docs-results-panel" aria-live="polite" hidden>
+            <div class="docs-results-heading" id="docs-results-heading"></div>
+            <div class="docs-command-list" id="docs-command-list"></div>
+            <button class="docs-load-more" id="docs-load-more" type="button" hidden></button>
+            <div class="empty-state" id="docs-empty" hidden>No commands match your search. Try another word.</div>
+          </section>
+        </section>
+        <section class="page" id="page-premium" aria-labelledby="premium-title">
+          <div class="page-title">
+            <div><div class="eyebrow"><svg><use href="#i-shield"></use></svg>Extra perks</div><h1 id="premium-title">Madoka Premium</h1><p>Explore plans, Premium commands, and how to activate your server's access.</p></div>
+          </div>
+          <div class="premium-overview">
+            <div class="premium-banner">
+              <div><div class="eyebrow">More for your community</div><h2>Unlock more with Premium.</h2><p>Choose a plan and contact a Madoka developer to arrange Premium access. Purchases are arranged directly with a developer; this page does not process payments.</p></div>
+              <img src="https://cdn.discordapp.com/emojis/1557425083625242656.webp?size=96&amp;animated=true" alt="" loading="lazy">
+            </div>
+            <div class="premium-plans" aria-label="Premium plans">
+              <article class="premium-plan"><span class="premium-plan-label">Monthly</span><strong class="premium-price">₱99</strong><span class="premium-period">per month</span><p>Flexible Premium access for your server.</p></article>
+              <article class="premium-plan featured"><span class="premium-plan-label">Yearly</span><strong class="premium-price">₱199</strong><span class="premium-period">per year</span><p>One year of Premium access at the yearly rate.</p></article>
+              <article class="premium-plan"><span class="premium-plan-label">Lifetime</span><strong class="premium-price">₱350</strong><span class="premium-period">one-time</span><p>Lifetime Premium access for your server.</p></article>
+            </div>
+            <div class="premium-redeem">
+              <span class="stat-icon"><svg><use href="#i-shield"></use></svg></span>
+              <div><h3>Premium commands</h3><p>Use your server's active prefix before prefix commands. The current Premium commands are listed below; for command-specific requirements and availability, check the bot's response or contact a Madoka developer.</p></div>
+            </div>
+            <section class="docs-section" aria-labelledby="premium-commands-title">
+              <h2 id="premium-commands-title">Premium command guide</h2>
+              <p>Browse the current Premium commands.</p>
+              <div id="premium-command-guide"></div>
+            </section>
+            <div class="docs-callout">Need help, want to report a bug, or interested in Premium? Visit <button class="inline-link" type="button" data-goto="developers">Madoka Developers</button> to contact the team.</div>
+          </div>
+        </section>
+        <section class="page" id="page-developers" aria-labelledby="developers-title">
+          <div class="page-title">
+            <div><div class="eyebrow"><svg><use href="#i-users"></use></svg>Meet the team</div><h1 id="developers-title">Madoka Developers</h1><p>Contact the team for help with the Madoka Discord bot, bug reports, or Premium.</p></div>
+          </div>
+          <p class="developer-page-intro">Select a verified Madoka developer to open their Discord profile and ask about bot support, report a bug, or learn about Premium.</p>
+          <div class="developer-page-list">
+            <article class="developer-profile">
+              <img class="developer-profile-avatar" src="https://cdn.discordapp.com/avatars/1443924448230117436/a337dac71f9448d0756634fe5dbc83a5.png?size=256" data-fallback="KE" alt="Keso's Discord avatar" loading="eager">
+              <div class="developer-profile-info"><h2 class="developer-name"><span class="developer-name-text">Keso</span><span class="verified-badge" role="img" aria-label="Verified developer" title="Verified developer"><svg aria-hidden="true"><use href="#i-check"></use></svg></span></h2><p>Madoka Developer</p><a class="developer-profile-link" href="https://discord.com/users/1443924448230117436" target="_blank" rel="noopener noreferrer">Open Keso's Discord profile <svg><use href="#i-arrow"></use></svg></a></div>
+            </article>
+            <article class="developer-profile">
+              <img class="developer-profile-avatar" src="https://cdn.discordapp.com/avatars/1488018421022195854/f27cf67c210b1c85ccd9f74cf9355f9d.png?size=256" data-fallback="7" alt="7's Discord avatar" loading="eager">
+              <div class="developer-profile-info"><h2 class="developer-name"><span class="developer-name-text">7</span><span class="verified-badge" role="img" aria-label="Verified developer" title="Verified developer"><svg aria-hidden="true"><use href="#i-check"></use></svg></span></h2><p>Madoka Developer</p><a class="developer-profile-link" href="https://discord.com/users/1488018421022195854" target="_blank" rel="noopener noreferrer">Open 7's Discord profile <svg><use href="#i-arrow"></use></svg></a></div>
+            </article>
+          </div>
+          <section class="review-panel" aria-labelledby="review-title">
+            <div class="review-heading"><div><div class="eyebrow">Your feedback</div><h2 id="review-title">How is Madoka working for your server?</h2><p>Leave a star rating. A comment is optional.</p></div><span class="review-mark" aria-hidden="true">★</span></div>
+            <form class="review-form" id="review-form">
+              <fieldset class="review-rating">
+                <legend>Your rating</legend>
+                <div class="review-stars" role="radiogroup" aria-label="Rate Madoka from 1 to 5 stars">
+                  <input id="review-star-1" type="radio" name="rating" value="1"><label for="review-star-1" aria-label="1 star">★</label>
+                  <input id="review-star-2" type="radio" name="rating" value="2"><label for="review-star-2" aria-label="2 stars">★</label>
+                  <input id="review-star-3" type="radio" name="rating" value="3"><label for="review-star-3" aria-label="3 stars">★</label>
+                  <input id="review-star-4" type="radio" name="rating" value="4"><label for="review-star-4" aria-label="4 stars">★</label>
+                  <input id="review-star-5" type="radio" name="rating" value="5"><label for="review-star-5" aria-label="5 stars">★</label>
+                </div>
+              </fieldset>
+              <label class="review-comment-label" for="review-comment">Comment <span>Optional</span></label>
+              <textarea id="review-comment" name="comment" maxlength="500" rows="3" placeholder="What do you like, or what could be better?"></textarea>
+              <div class="review-form-footer"><p>Public feedback is saved for all visitors. You can post another rating or comment after the 5-minute cooldown.</p><button class="button-primary" id="review-submit" type="submit">Share feedback</button></div>
+              <p class="review-status" id="review-status" role="status" aria-live="polite"></p>
+            </form>
+            <div class="review-dashboard">
+              <div class="review-stats">
+                <section class="review-stat-card" aria-label="Community rating summary">
+                  <div class="review-average"><strong id="review-average">—</strong><span>/ 5</span></div>
+                  <p class="review-stat-label" id="review-total">Loading ratings…</p>
+                  <div class="rating-distribution" id="rating-distribution" aria-label="Rating distribution"></div>
+                </section>
+                <section class="review-chart-card" aria-labelledby="rating-chart-title">
+                  <h3 id="rating-chart-title">Daily ratings</h3>
+                  <p>Community ratings over the last 14 days</p>
+                  <div class="rating-chart" id="rating-chart" aria-label="Daily rating counts for the last 14 days"></div>
+                </section>
+              </div>
+              <section class="review-comments-card" aria-labelledby="top-comments-title">
+                <h3 id="top-comments-title">Top-rated comments</h3>
+                <div class="review-comment-list" id="top-comments"></div>
+              </section>
+              <section class="review-comments-card" aria-labelledby="community-comments-title">
+                <h3 id="community-comments-title">Community comments</h3>
+                <div class="review-comment-list" id="community-comments"></div>
+                <p class="review-empty" id="reviews-empty" hidden>No community comments yet. Be the first to share your feedback!</p>
+                <button class="review-load-more" id="reviews-load-more" type="button" hidden>Show more comments</button>
+              </section>
+            </div>
+          </section>
+        </section>
+        <section class="page" id="page-commands" aria-labelledby="commands-title">
+          <div class="page-title">
+            <div><div class="eyebrow"><svg><use href="#i-command"></use></svg>Madoka Discord bot</div><h1 id="commands-title">Command library</h1><p>Browse commands for the Madoka Discord bot. Click the copy icon beside a command to copy it.</p></div>
+          </div>
+          <div class="command-toolbar">
+            <label class="search-wrap"><svg><use href="#i-search"></use></svg><input class="search-input" id="command-search" type="search" placeholder="Search commands or categories..." autocomplete="off" aria-label="Search commands or categories"></label>
+            <details class="category-picker" id="category-picker">
+              <summary class="category-picker-trigger"><span id="category-filter-label">All categories</span><svg aria-hidden="true"><use href="#i-chevron"></use></svg></summary>
+              <div class="category-picker-menu" id="category-filter" role="listbox" aria-label="Filter by category"></div>
+            </details>
+          </div>
+          <div class="command-summary"><span id="result-count" aria-live="polite"></span><span>Click <strong>copy</strong> to copy the command</span></div>
+          <div class="command-groups" id="command-groups"></div>
+          <div class="empty-state" id="empty-state" hidden>No matching commands. Try another search.</div>
+        </section>
+        <footer class="page-footer">Powered by <strong>Virtus X Development.</strong></footer>
+      </div>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"><svg><use href="#i-check"></use></svg><span id="toast-message">Command copied!</span></div>
+  <script>
+const mainFeatures = [
+      ["Security", "Protect your server and keep members safe."],
+      ["Automoderation", "Let automatic moderation handle the busywork."],
+      ["Utility", "Helpful tools and useful server information."],
+      ["Music", "Bring music and playback controls to voice."],
+      ["Autoreact & responder", "Automate reactions and custom replies."],
+      ["Moderation", "Manage members and keep conversations on track."],
+      ["Autorole & Invc", "Manage roles and invitation rewards."],
+      ["Fun", "Lighthearted commands for your community."],
+      ["Games", "Play games together right in your server."],
+      ["Ignore Channels", "Choose where bot commands should work."],
+      ["Server", "Manage and explore your server."],
+      ["Voice", "Voice-channel controls and management."],
+      ["Welcomer", "Welcome members as they join."],
+      ["Giveaway", "Create and manage community giveaways."],
+      ["Ticket", "Organize member support with tickets."],
+      ["Invite Tracker", "Keep track of server invitations."]
+    ];
+    const extraFeatures = ["Advance Logging", "Vanityroles", "Counting", "J2C", "AI", "Boost", "Leveling", "Sticky", "Verification", "Encryption", "Minecraft", "Joindm", "Birthday", "Customrole", "Premium"];
+    const commandData = [
+      ["Antinuke", "antinuke, antinuke enable, antinuke disable, antinuke wizard, antinuke filters, antinuke logs, antinuke wl, antinuke unwl, antinuke wlist, antinuke wlreset"],
+      ["ExtraOwner", "extraowner set, extraowner reset, extraowner view, extraowner clear"],
+      ["AutoMod", "automod, automod enable, automod disable, automod manage, automod settings, automod rules, automod reset, automod logging"],
+      ["Whitelist", "automod wl channel, automod wl role, automod wl show, automod wl reset"],
+      ["Blacklist", "automod bl add, automod bl remove, automod bl list"],
+      ["AutoReact", "arc add, arc channel, arc remove, arc removechannel, arc list, arc clear"],
+      ["AutoResponder", "ar add, ar addcontains, ar addstart, ar remove, ar list, ar clear"],
+      ["Humans", "autorole humans add, autorole humans remove, autorole humans list"],
+      ["Bots", "autorole bots add, autorole bots remove, autorole bots list"],
+      ["Embed", "embed, embed create"],
+      ["General", "ping, pong, stats, uptime, system, profile"],
+      ["Giveaway", "giveaway, gstart, gend, greroll, glist, gdelete"],
+      ["Setup", "greet setup, greet channel, greet type, greet disable"],
+      ["Container Settings", "greet content, greet title, greet description, greet color, greet thumbnail, greet image"],
+      ["Other", "greet message, greet deleteafter, greet test, greet config, greet variables"],
+      ["Logging", "log setup, log set, log enable, log disable, log config, log types, log reset"],
+      ["Moderation", "ban, fakeban, softban, kick, mute, unmute, unban, nick, nuke, unbanall, snipe"],
+      ["Lock & Hide", "lock, unlock, lockall, unlockall, hide, unhide, hideall, unhideall, slowmode, unslowmode"],
+      ["Purge", "clear, clearall, clearuser, clearbots, clearembed, clearmentions, clearreactions, clearfiles, clearimages, clearemoji, clearcontain"],
+      ["Channel", "channel create, channel delete, channel rename, channel clone, channel transfer"],
+      ["List", "list hypesquad, list pending, list channels, list timeouts, list hasperms, list bans, list users, list boosters, list emojis, list bots, list admins, list mods, list roles, list invoice, list activedeveloper, list joinedat, list early, list inrole, list createdat, list bughunters"],
+      ["Playback", "play, pause, resume, skip, stop, nowplaying"],
+      ["Queue", "queue, shuffle, loop"],
+      ["Settings", "volume, 247, autoplay"],
+      ["NoPrefix", "np, np add, np remove, np list, np check"],
+      ["Premium", "premium, premstatus, activate, custombot, tag"],
+      ["Reaction Roles", "rr add, rr remove, rr list, rr clear"],
+      ["Role Management", "role add, role all, role bots, role colour, role create, role delete, role humans, role remove, role rename"],
+      ["Remove Role", "rrole, rrole humans, rrole bots, rrole all"],
+      ["Ticket", "ticket, ticket setup, ticket logs, ticket staff, ticket category, ticket config"],
+      ["Messages", "messages, addmessages, removemessages, resetmessages"],
+      ["Tracking", "blacklistchannel, unblacklistchannel, blacklistedchannels, invites, tracker"],
+      ["VoiceMaster", "voicemaster, voicemaster setup, voicemaster buttons, voicemaster config, voicemaster reset"]
+    ].map(([name, commands]) => [name, commands.split(",").map(command => command.trim()).filter(Boolean)]);
+    const totalCommandCount = commandData.reduce((total, [, commands]) => total + commands.length, 0);
+    document.getElementById("total-command-count").textContent = String(totalCommandCount);
+    const premiumCommandGroups = [
+      ["Premium Commands", [
+        ["premium", "Provides access to Premium commands and options."],
+        ["premstatus", "Checks Premium status."],
+        ["activate", "Activates Premium."],
+        ["custombot", "Provides access to custom bot options."],
+        ["tag", "Provides access to Premium tag options."]
+      ]]
+    ];
+
+    const featureCard = ([name, description], extra = false) =>
+      `<div class="feature-card${extra ? " extra" : ""}"><strong>${name}</strong><span>${description}</span></div>`;
+    document.getElementById("main-features").innerHTML = mainFeatures.map(item => featureCard(item)).join("");
+    document.getElementById("extra-features").innerHTML = extraFeatures.map(name => featureCard([
+      name,
+      name === "Premium" ? "Unlock Premium commands and additional server features." : "An extra tool to customize your server experience."
+    ], true)).join("");
+
+    const commandGroups = document.getElementById("command-groups");
+    const categoryFilter = document.getElementById("category-filter");
+    const categoryPicker = document.getElementById("category-picker");
+    const categoryFilterLabel = document.getElementById("category-filter-label");
+    const commandSearch = document.getElementById("command-search");
+    const resultCount = document.getElementById("result-count");
+    const emptyState = document.getElementById("empty-state");
+    const copyIcon = '<svg aria-hidden="true"><use href="#i-copy"></use></svg>';
+    let selectedCommandCategory = "";
+    const allCategoryOption = document.createElement("button");
+    allCategoryOption.className = "category-picker-option";
+    allCategoryOption.type = "button";
+    allCategoryOption.setAttribute("role", "option");
+    allCategoryOption.dataset.category = "";
+    allCategoryOption.setAttribute("aria-selected", "true");
+    allCategoryOption.textContent = "All categories";
+    categoryFilter.append(allCategoryOption);
+    commandData.forEach(([category, commands], index) => {
+      const option = document.createElement("button");
+      option.className = "category-picker-option";
+      option.type = "button";
+      option.setAttribute("role", "option");
+      option.dataset.category = category;
+      option.setAttribute("aria-selected", "false");
+      option.textContent = category;
+      categoryFilter.append(option);
+      const group = document.createElement("section");
+      group.className = "command-group";
+      group.dataset.category = category;
+      group.innerHTML = `<button class="group-head" type="button" aria-expanded="false"><span class="group-name"><span class="group-mark">${String(index + 1).padStart(2, "0")}</span>${category}</span><span class="group-count">${commands.length} ${commands.length === 1 ? "command" : "commands"}<svg aria-hidden="true"><use href="#i-chevron"></use></svg></span></button><div class="command-list" aria-hidden="true" inert><div class="command-list-inner">${commands.map(command => `<div class="command-item" data-command="${encodeURIComponent(command)}"><code class="command-name">${command.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</code><button class="copy-button" type="button" aria-label="Copy ${command.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")}" title="Copy command">${copyIcon}</button></div>`).join("")}</div></div>`;
+      commandGroups.append(group);
+    });
+
+    const categoryDescriptions = {
+      Antinuke: "Protects the server from destructive actions and manages trusted users and filters.",
+      ExtraOwner: "Manages extra owners trusted by the server.",
+      AutoMod: "Configures automatic moderation, rules, and logging.",
+      Whitelist: "Manages the channels and roles exempted from automod.",
+      Blacklist: "Manages the automod blacklist.",
+      AutoReact: "Configures automatic reactions for channels and messages.",
+      AutoResponder: "Creates and manages automatic replies.",
+      Humans: "Configures autoroles for human members.",
+      Bots: "Configures autoroles for bots.",
+      Embed: "Creates embeds for the server.",
+      General: "Provides general bot and server information.",
+      Giveaway: "Starts, ends, rerolls, lists, and deletes giveaways.",
+      Setup: "Configures welcome messages and their destination or type.",
+      "Container Settings": "Edits the content and appearance of welcome-message embeds.",
+      Other: "Tests and manages welcome-message content and settings.",
+      Logging: "Configures which server events are recorded.",
+      Moderation: "Helps staff manage members and moderation actions.",
+      "Lock & Hide": "Controls channel access, visibility, and slowmode.",
+      Purge: "Bulk-deletes messages matching selected criteria.",
+      Channel: "Creates, deletes, renames, clones, and transfers channels.",
+      List: "Lists server members and resources by category.",
+      Playback: "Controls music playback in voice channels.",
+      Queue: "Views and controls the music queue.",
+      Settings: "Adjusts music playback settings.",
+      NoPrefix: "Manages and checks no-prefix command access.",
+      Premium: "Manages Premium access and custom bot features.",
+      "Reaction Roles": "Creates and manages reaction-role assignments.",
+      "Role Management": "Creates, assigns, removes, and edits server roles.",
+      "Remove Role": "Removes roles from members, bots, or everyone.",
+      Ticket: "Configures and manages member-support tickets.",
+      Messages: "Views, adds, removes, and resets message counts.",
+      Tracking: "Manages channel blacklists and invitation tracking.",
+      VoiceMaster: "Sets up and manages VoiceMaster channels and controls."
+    };
+    const specificCommandDescriptions = {
+      ping: "Checks Madoka's response latency.",
+      botinfo: "Shows information about Madoka.",
+      stats: "Shows Madoka's available statistics.",
+      invite: "Provides an invite link for Madoka.",
+      serverinfo: "Shows information about the current server.",
+      userinfo: "Shows information about a selected member.",
+      roleinfo: "Shows information about a selected role.",
+      avatar: "Displays a member's profile picture.",
+      banner: "Displays a member or server banner.",
+      servericon: "Displays the current server icon.",
+      membercount: "Shows how many members are in the server.",
+      poll: "Creates a poll for members to answer.",
+      play: "Starts playing a requested track in voice.",
+      queue: "Shows the current music queue.",
+      warn: "Issues a moderation warning to a member.",
+      ban: "Bans a member from the server.",
+      kick: "Removes a member from the server.",
+      mute: "Restricts a member from speaking.",
+      unban: "Removes a member's server ban.",
+      "gstart": "Starts a giveaway.",
+      "glist": "Lists current giveaways.",
+      gend: "Ends a giveaway.",
+      "/imagine": "Creates an AI-generated image from a text prompt.",
+      "ticket setup": "Creates the ticket panel members can use to contact server staff.",
+      "ticket close": "Closes the current support ticket.",
+      "ticket claim": "Assigns the current support ticket to you.",
+      "ticket transcript": "Creates a transcript of the current support ticket.",
+      whitelisted: "Lists users and roles currently trusted by the server's antinuke protection.",
+      "banner user": "Displays the profile banner for a selected member.",
+      "banner server": "Displays the current server banner.",
+      permissions: "Checks the permissions available to a member or role.",
+      enlargetopcheck: "Reviews role hierarchy and top-role protection for the server.",
+      imagine: "Creates an AI-generated image from a text prompt.",
+      howgay: "Returns a playful, fictional percentage for the fun command.",
+      lesbian: "Runs a lighthearted community fun interaction.",
+      cute: "Shows a playful cuteness result for a selected member.",
+      intelligence: "Returns a fictional intelligence score for entertainment.",
+      chutiya: "Runs a lighthearted community fun interaction.",
+      horny: "Runs a playful, non-serious fun interaction.",
+      tharki: "Runs a playful, non-serious fun interaction.",
+      gif: "Finds a GIF matching the provided search.",
+      iplookup: "Looks up public metadata for an IP address; it cannot identify a person's precise location.",
+      nitro: "Runs a Nitro-themed fun interaction; it does not generate or grant Discord Nitro.",
+      "country-guesser": "Starts a game where players guess a country.",
+      "lights-out": "Starts the Lights Out puzzle game.",
+      "2048": "Starts the number-merging puzzle game 2048.",
+      "memory-game": "Starts a memory-matching game.",
+      "number-slider": "Starts a sliding-number puzzle.",
+      battleship: "Starts a Battleship game.",
+      "connect-four": "Starts a Connect Four game.",
+      staff: "Views or manages the server's staff setup role.",
+      girl: "Views or manages the server's girl setup role.",
+      friend: "Views or manages the server's friend setup role.",
+      vip: "Views or manages the server's VIP setup role.",
+      guest: "Views or manages the server's guest setup role.",
+      addinvites: "Adds invite credits to a selected member.",
+      inviteleaderboard: "Shows the members with the most tracked invites.",
+      invitelogging: "Configures logging for tracked server invites.",
+      j2csetup: "Sets up join-to-create voice channels for the server.",
+      j2creset: "Resets the join-to-create voice-channel configuration.",
+      boostrole: "Configures the role reward given to server boosters.",
+      birthdaysetup: "Sets up the server's birthday feature and announcement options."
+    };
+    const commandRootDescriptions = {
+      antinuke: "Protects the server from destructive events and manages its safety settings.",
+      whitelist: "Manages members trusted by the server's antinuke protection.",
+      whitelistrole: "Manages trusted roles for the server's antinuke protection.",
+      unwhitelist: "Removes a member from the antinuke trusted list.",
+      unwhitelistrole: "Removes a role from the antinuke trusted list.",
+      extraowner: "Manages additional owners trusted by the server's protection tools.",
+      nightmode: "Controls the server's night-mode protection settings.",
+      reminder: "Creates or clears reminders for later.",
+      automod: "Controls automatic moderation rules, punishments, logs, and exclusions.",
+      blacklistword: "Manages blocked words, settings, and bypass lists.",
+      role: "Manages server roles, including creating, assigning, and editing roles.",
+      clear: "Bulk-deletes messages that match the selected criteria.",
+      voice: "Manages members and access in voice channels.",
+      play: "Plays a requested track in your current voice session.",
+      search: "Finds available music matching your search.",
+      queue: "Shows the tracks waiting in the music queue.",
+      filter: "Controls audio filters for music playback.",
+      greet: "Configures welcome messages and where they are sent.",
+      setup: "Creates or updates a server feature configuration.",
+      autorole: "Configures roles assigned automatically to joining members or bots.",
+      autoresponder: "Creates and manages automatic replies to matching messages.",
+      react: "Configures automatic reactions for messages.",
+      log: "Configures which server events are recorded.",
+      level: "Manages member XP, rank rewards, and leveling settings.",
+      verification: "Configures and manages the server verification process.",
+      birthday: "Manages member birthday dates and birthday features.",
+      joindm: "Configures direct messages sent to new members.",
+      minecraft: "Configures or checks Madoka's Minecraft integration.",
+      ai: "Controls Madoka's AI features and conversation settings.",
+      boost: "Configures server boost messages, channels, and role rewards.",
+      sticky: "Creates and manages persistent channel messages.",
+      media: "Configures media-channel behavior and bypass rules.",
+      ignore: "Controls which commands, channels, or users Madoka ignores.",
+      vcrole: "Manages roles associated with voice-channel activity.",
+      counting: "Configures the counting channel and its server settings.",
+      vanityroles: "Configures roles awarded for using a server vanity invite.",
+      invites: "Shows tracked invitation information for this server.",
+      gstart: "Starts a server giveaway.",
+      gend: "Ends a server giveaway.",
+      greroll: "Selects a new winner for a giveaway.",
+      glist: "Lists active giveaways.",
+      ban: "Bans a member from the server.",
+      kick: "Removes a member from the server.",
+      warn: "Issues a moderation warning to a member.",
+      mute: "Restricts a member from speaking.",
+      lock: "Prevents members from sending messages in a channel.",
+      unlock: "Restores members' ability to send messages in a channel.",
+      poll: "Creates a poll for server members.",
+      avatar: "Displays a member's profile picture.",
+      serverinfo: "Shows information about the current server.",
+      userinfo: "Shows information about a selected member.",
+      roleinfo: "Shows information about a selected role.",
+      ping: "Checks Madoka's response latency.",
+      ticket: "Manages member-support tickets.",
+      tickets: "Manages member-support tickets.",
+      backup: "Creates, lists, restores, or deletes saved server backups.",
+      botinfo: "Shows Madoka's bot profile and information.",
+      stats: "Shows Madoka's available statistics.",
+      invite: "Provides a link to invite Madoka to a server.",
+      boostcount: "Shows the server's current boost count.",
+      unbanall: "Unbans all banned users from the server.",
+      "joined-at": "Shows when a member joined the server.",
+      github: "Shares Madoka's project repository.",
+      vcinfo: "Shows information about the current voice channel.",
+      channelinfo: "Shows details about a selected channel.",
+      badges: "Shows a member's available Discord badges.",
+      timer: "Sets a timer and notifies you when it ends.",
+      status: "Shows or updates your current status.",
+      afk: "Sets an away message for when members mention you.",
+      hack: "Runs a fictional hacker-style fun interaction.",
+      token: "Runs the token-themed fun command; it does not reveal account credentials.",
+      users: "Lists members matching the selected server filter.",
+      wizz: "Runs a server-wizzing action; review its effects before use.",
+      urban: "Looks up a term in the Urban Dictionary.",
+      rickroll: "Shares a Rickroll with the server.",
+      hash: "Calculates a hash from the provided text.",
+      snipe: "Shows a recently deleted message when available.",
+      list: "Lists server members or items matching the selected list type.",
+      calculator: "Calculates a mathematical expression.",
+      audit: "Reviews recent moderation or server audit information.",
+      clearwarns: "Clears a member's recorded warnings.",
+      clone: "Clones the current channel.",
+      hide: "Hides the current channel from members.",
+      hideall: "Hides channels using the configured bulk action.",
+      nick: "Changes a member's server nickname.",
+      nuke: "Recreates the current channel; this is destructive and should be used carefully.",
+      roleicon: "Changes or views a role's icon.",
+      slowmode: "Sets the message slowmode for a channel.",
+      lockall: "Locks channels using the configured bulk action.",
+      unlockall: "Unlocks channels using the configured bulk action.",
+      steal: "Saves an emoji or sticker from a message to the server.",
+      unhide: "Makes the current channel visible to members again.",
+      unhideall: "Restores channel visibility using the configured bulk action.",
+      unslowmode: "Removes slowmode from a channel.",
+      removerole: "Removes a role from selected server members.",
+      deleteemoji: "Deletes a custom server emoji.",
+      deletesticker: "Deletes a custom server sticker.",
+      topcheck: "Checks or configures the server's top-role protection.",
+      loop: "Sets the repeat mode for music playback.",
+      autoplay: "Toggles automatic music recommendations after the queue ends.",
+      nowplaying: "Shows the track currently playing.",
+      shuffle: "Shuffles the current music queue.",
+      stop: "Stops music playback and clears the active session.",
+      skip: "Skips the currently playing track.",
+      seek: "Jumps to a position in the current track.",
+      join: "Connects Madoka to your voice channel.",
+      disconnect: "Disconnects Madoka from the voice channel.",
+      replay: "Restarts the currently playing track.",
+      clearqueue: "Clears the current music queue.",
+      pause: "Pauses music playback.",
+      resume: "Resumes paused music playback.",
+      volume: "Changes the music playback volume.",
+      ship: "Creates a playful compatibility result for two members.",
+      mydog: "Shows a dog-themed fun response.",
+      chat: "Starts an interactive chat response.",
+      translate: "Translates the provided text.",
+      weather: "Looks up weather information for a location.",
+      hug: "Sends a friendly hug interaction.",
+      kiss: "Sends a friendly kiss interaction.",
+      pat: "Sends a friendly pat interaction.",
+      cuddle: "Sends a friendly cuddle interaction.",
+      slap: "Sends a fictional slap interaction.",
+      tickle: "Sends a playful tickle interaction.",
+      spank: "Sends a fictional playful interaction.",
+      "8ball": "Answers a question with a magic eight-ball style response.",
+      truth: "Provides a truth prompt for a game.",
+      dare: "Provides a dare prompt for a game.",
+      blackjack: "Starts a game of blackjack.",
+      chess: "Starts or manages a chess game.",
+      "tic-tac-toe": "Starts a tic-tac-toe game.",
+      rps: "Plays rock-paper-scissors.",
+      wordle: "Starts a Wordle-style word guessing game.",
+      slots: "Plays the slot machine game.",
+      log: "Configures which server events are recorded.",
+      "setbirthday": "Sets a member's birthday.",
+      removebirthday: "Removes a saved member birthday.",
+      listbirthdays: "Lists saved member birthdays."
+    };
+    const commandActionLabels = {
+      enable: "Turn on",
+      disable: "Turn off",
+      on: "Turn on",
+      off: "Turn off",
+      add: "Add or assign",
+      create: "Create",
+      setup: "Set up",
+      start: "Start",
+      remove: "Remove",
+      delete: "Delete",
+      reset: "Reset",
+      clear: "Clear",
+      edit: "Edit",
+      update: "Update",
+      set: "Set",
+      config: "View or change",
+      status: "Check the current",
+      show: "View",
+      view: "View",
+      list: "List",
+      stats: "View statistics for",
+      leaderboard: "View the leaderboard for",
+      channel: "Set the channel for",
+      role: "Manage roles for",
+      user: "Manage a member in",
+      bypass: "Manage bypass rules for"
+    };
+    const commandFeatureNames = {
+      antinuke: "antinuke protection",
+      whitelist: "trusted-member whitelist",
+      whitelistrole: "trusted-role whitelist",
+      unwhitelist: "trusted-member whitelist",
+      unwhitelistrole: "trusted-role whitelist",
+      extraowner: "additional trusted owners",
+      nightmode: "night-mode protection",
+      reminder: "reminders",
+      automod: "automatic moderation",
+      blacklistword: "blocked-word rules",
+      role: "server roles",
+      clear: "message cleanup",
+      voice: "voice-channel members",
+      play: "music playback",
+      search: "music search",
+      queue: "the music queue",
+      filter: "music audio filters",
+      greet: "welcome messages",
+      setup: "this server feature",
+      autorole: "automatic role assignment",
+      autoresponder: "automatic replies",
+      react: "automatic reactions",
+      log: "server event logging",
+      level: "member leveling",
+      verification: "member verification",
+      birthday: "member birthdays",
+      joindm: "join direct messages",
+      minecraft: "Minecraft integration",
+      ai: "AI features",
+      boost: "server boost rewards",
+      sticky: "persistent channel messages",
+      media: "media channel settings",
+      ignore: "ignored commands, channels, and users",
+      vcrole: "voice-channel roles",
+      counting: "the server counting game",
+      vanityroles: "vanity invite roles",
+      invites: "server invite tracking",
+      backup: "server backups",
+      ban: "server bans",
+      kick: "member access",
+      warn: "member warnings",
+      mute: "member speaking permissions",
+      lock: "channel message permissions",
+      unlock: "channel message permissions",
+      poll: "server polls",
+      ticket: "support tickets",
+      tickets: "support tickets",
+      gstart: "a server giveaway",
+      gend: "a server giveaway",
+      greroll: "giveaway winners",
+      glist: "active giveaways"
+    };
+    Object.assign(specificCommandDescriptions, {
+      antinuke: "Shows the current antinuke protection status and available controls.",
+      "antinuke enable": "Enables antinuke protection for this server.",
+      "antinuke disable": "Disables antinuke protection for this server.",
+      "antinuke wizard": "Guides staff through configuring antinuke protection.",
+      "antinuke filters": "Views or configures the antinuke event filters.",
+      "antinuke logs": "Shows antinuke protection logs.",
+      "antinuke wl": "Adds a member or role to the antinuke whitelist.",
+      "antinuke unwl": "Removes a member or role from the antinuke whitelist.",
+      "antinuke wlist": "Lists members and roles on the antinuke whitelist.",
+      "antinuke wlreset": "Resets the antinuke whitelist.",
+      "extraowner set": "Adds an extra trusted owner to the server's protection configuration.",
+      "extraowner reset": "Resets the extra-owner configuration.",
+      "extraowner view": "Shows the configured extra owners.",
+      "extraowner clear": "Removes all configured extra owners.",
+      "automod manage": "Opens automod management options.",
+      "automod settings": "Views or changes automod settings.",
+      "automod rules": "Views or manages the server's automod rules.",
+      "automod reset": "Resets the server's automod configuration.",
+      "automod logging": "Configures where automod actions are logged.",
+      "automod wl channel": "Adds or removes a channel from the automod whitelist.",
+      "automod wl role": "Adds or removes a role from the automod whitelist.",
+      "automod wl show": "Lists channels and roles on the automod whitelist.",
+      "automod wl reset": "Resets the automod whitelist.",
+      "automod bl add": "Adds a word, member, or role to the automod blacklist.",
+      "automod bl remove": "Removes an entry from the automod blacklist.",
+      "automod bl list": "Lists the current automod blacklist entries.",
+      "arc add": "Adds an automatic reaction rule.",
+      "arc channel": "Sets or views the channel used by an automatic reaction rule.",
+      "arc remove": "Removes an automatic reaction rule.",
+      "arc removechannel": "Removes an automatic reaction channel configuration.",
+      "arc list": "Lists configured automatic reaction rules.",
+      "arc clear": "Clears automatic reaction rules.",
+      "ar add": "Adds an automatic reply for an exact message match.",
+      "ar addcontains": "Adds an automatic reply triggered when a message contains matching text.",
+      "ar addstart": "Adds an automatic reply triggered when a message starts with matching text.",
+      "ar remove": "Removes an automatic reply rule.",
+      "ar list": "Lists configured automatic replies.",
+      "ar clear": "Clears configured automatic replies.",
+      "autorole humans add": "Assigns a role automatically to new human members.",
+      "autorole humans remove": "Removes a role from automatic assignment to human members.",
+      "autorole humans list": "Lists roles automatically assigned to human members.",
+      "autorole bots add": "Assigns a role automatically to newly joined bots.",
+      "autorole bots remove": "Removes a role from automatic assignment to bots.",
+      "autorole bots list": "Lists roles automatically assigned to bots.",
+      "embed create": "Starts creating a custom embed for the server.",
+      pong: "Replies with a simple pong response.",
+      uptime: "Shows how long Madoka has been online.",
+      system: "Shows bot process and system status information.",
+      profile: "Shows a member profile.",
+      giveaway: "Opens giveaway commands and options.",
+      gdelete: "Deletes a giveaway from the server.",
+      "greet setup": "Starts configuring welcome messages for the server.",
+      "greet channel": "Sets the channel where welcome messages are sent.",
+      "greet type": "Sets the style or type of the welcome message.",
+      "greet disable": "Disables welcome messages.",
+      "greet content": "Sets the text shown in the welcome message.",
+      "greet title": "Sets the title of the welcome-message embed.",
+      "greet description": "Sets the description of the welcome-message embed.",
+      "greet color": "Sets the color of the welcome-message embed.",
+      "greet thumbnail": "Sets the thumbnail image of the welcome-message embed.",
+      "greet image": "Sets the main image of the welcome-message embed.",
+      "greet message": "Views or changes the welcome-message template.",
+      "greet deleteafter": "Sets how long after sending a welcome message it is deleted.",
+      "greet test": "Sends a test welcome message using the current configuration.",
+      "greet config": "Shows the current welcome-message configuration.",
+      "greet variables": "Lists placeholders available in welcome-message templates.",
+      "log setup": "Starts configuring server event logging.",
+      "log set": "Sets the destination or options for server event logs.",
+      "log enable": "Enables server event logging.",
+      "log disable": "Disables server event logging.",
+      "log config": "Shows the current server event logging configuration.",
+      "log types": "Lists the server event types available for logging.",
+      "log reset": "Resets server event logging settings.",
+      fakeban: "Shows a simulated ban message without banning the member.",
+      softban: "Bans and immediately unbans a member to remove their recent messages.",
+      unmute: "Removes the server mute or timeout from a member.",
+      nick: "Changes a member's server nickname.",
+      unbanall: "Removes bans for all users in the server ban list.",
+      "lockall": "Locks eligible server channels.",
+      "unlockall": "Unlocks channels locked by the server's bulk lock action.",
+      hide: "Hides the current channel from the selected member group.",
+      unhide: "Restores the current channel's visibility.",
+      hideall: "Hides eligible server channels.",
+      unhideall: "Restores visibility for channels hidden by the bulk action.",
+      slowmode: "Sets a message slowmode interval for the current channel.",
+      unslowmode: "Removes the slowmode interval from the current channel.",
+      clearall: "Bulk-deletes recent messages from the current channel.",
+      clearuser: "Deletes recent messages sent by a selected user.",
+      clearbots: "Deletes recent messages sent by bots.",
+      clearembed: "Deletes recent messages containing embeds.",
+      clearmentions: "Deletes recent messages containing mentions.",
+      clearreactions: "Removes reactions from recent messages.",
+      clearfiles: "Deletes recent messages containing file attachments.",
+      clearimages: "Deletes recent messages containing images.",
+      clearemoji: "Deletes recent messages containing emoji.",
+      clearcontain: "Deletes recent messages containing the specified text.",
+      "channel create": "Creates a new server channel.",
+      "channel delete": "Deletes a server channel.",
+      "channel rename": "Changes a server channel's name.",
+      "channel clone": "Creates a copy of a server channel.",
+      "channel transfer": "Transfers channel ownership or configuration as supported by the bot.",
+      "list channels": "Lists channels in the server.",
+      "list timeouts": "Lists members currently timed out in the server.",
+      "list hasperms": "Lists members or roles with the selected server permissions.",
+      "list bans": "Lists users banned from the server.",
+      "list users": "Lists server members.",
+      "list roles": "Lists roles in the server.",
+      "list mods": "Lists server moderators.",
+      "list admins": "Lists server administrators.",
+      "list joinedat": "Shows member join dates.",
+      "list createdat": "Shows account creation dates for server members.",
+      "list inrole": "Lists members who have a selected role.",
+      "list pending": "Lists members with a pending server membership screening step.",
+      "list hypesquad": "Lists server members with a HypeSquad badge.",
+      "list early": "Lists members with early Discord supporter badges.",
+      "list activedeveloper": "Lists members with the Active Developer badge.",
+      "list bughunters": "Lists members with a Discord Bug Hunter badge.",
+      pause: "Pauses the currently playing track.",
+      resume: "Resumes paused music playback.",
+      skip: "Skips the currently playing track and advances the queue.",
+      stop: "Stops playback and clears the active music session.",
+      nowplaying: "Shows the track currently playing.",
+      queue: "Shows tracks waiting to play in the current music queue.",
+      shuffle: "Randomizes the order of tracks in the current queue.",
+      loop: "Changes the repeat mode for the current track or queue.",
+      volume: "Shows or changes the music playback volume.",
+      "247": "Keeps the bot connected to the voice channel when the queue is empty.",
+      autoplay: "Toggles automatic track recommendations when the queue ends.",
+      np: "Shows the no-prefix access options for this server.",
+      "np add": "Grants a member no-prefix command access.",
+      "np remove": "Removes a member's no-prefix command access.",
+      "np list": "Lists members with no-prefix command access.",
+      "np check": "Checks whether a member has no-prefix command access.",
+      premium: "Shows Premium access options.",
+      premstatus: "Shows the server's Premium status.",
+      activate: "Activates Premium for the server.",
+      custombot: "Opens Premium custom-bot options.",
+      tag: "Manages the server's Premium tag.",
+      "rr add": "Creates a reaction-role assignment.",
+      "rr remove": "Removes a reaction-role assignment.",
+      "rr list": "Lists configured reaction roles.",
+      "rr clear": "Removes all reaction-role assignments.",
+      "role add": "Assigns a role to a selected member.",
+      "role all": "Assigns a role to all eligible server members.",
+      "role bots": "Assigns a role to bots in the server.",
+      "role colour": "Changes a role's display color.",
+      "role create": "Creates a server role.",
+      "role delete": "Deletes a server role.",
+      "role humans": "Assigns a role to human server members.",
+      "role remove": "Removes a role from a selected member.",
+      "role rename": "Changes a server role's name.",
+      rrole: "Removes a role from selected server members.",
+      "rrole humans": "Removes a role from all human members.",
+      "rrole bots": "Removes a role from all bots.",
+      "rrole all": "Removes a role from all eligible server members.",
+      ticket: "Shows member-support ticket commands and options.",
+      "ticket setup": "Creates or updates the server's support ticket panel.",
+      "ticket logs": "Shows or configures ticket activity logs.",
+      "ticket staff": "Sets or views the staff role for support tickets.",
+      "ticket category": "Sets or views the category used for support ticket channels.",
+      "ticket config": "Shows the current support ticket configuration.",
+      messages: "Shows the server's message activity counts.",
+      addmessages: "Adds message activity to a selected member's count.",
+      removemessages: "Removes message activity from a selected member's count.",
+      resetmessages: "Resets message activity counts.",
+      blacklistchannel: "Adds the current channel to the server's channel blacklist.",
+      unblacklistchannel: "Removes the current channel from the channel blacklist.",
+      blacklistedchannels: "Lists channels currently on the channel blacklist.",
+      invites: "Shows tracked invite counts for the server or a member.",
+      tracker: "Shows or configures server invitation tracking.",
+      voicemaster: "Shows VoiceMaster setup and channel-control options.",
+      "voicemaster setup": "Sets up VoiceMaster for the server.",
+      "voicemaster buttons": "Configures the buttons shown on VoiceMaster control panels.",
+      "voicemaster config": "Shows the current VoiceMaster configuration.",
+      "voicemaster reset": "Resets the VoiceMaster configuration."
+    });
+    Object.assign(commandRootDescriptions, {
+      antinuke: "Configures server protection against destructive actions and provides trusted-user controls.",
+      extraowner: "Manages extra owners trusted by server protection features.",
+      automod: "Manages automatic moderation settings, rules, whitelists, blacklists, and logs.",
+      arc: "Creates and manages automatic reaction rules and channels.",
+      ar: "Creates and manages automatic replies triggered by matching messages.",
+      autorole: "Manages roles automatically assigned to new human members and bots.",
+      embed: "Creates custom Discord embeds.",
+      uptime: "Shows how long Madoka has been running.",
+      system: "Shows Madoka's runtime and system status.",
+      profile: "Shows a Discord member's profile information.",
+      giveaway: "Manages server giveaways.",
+      greet: "Configures welcome messages, their style, and their content.",
+      log: "Configures server event logging.",
+      fakeban: "Displays a simulated ban action without actually banning a member.",
+      softban: "Bans and immediately unbans a member to remove recent messages.",
+      unmute: "Removes a member's mute or timeout.",
+      nick: "Changes a member's server nickname.",
+      unbanall: "Unbans every user in the server ban list.",
+      clearall: "Bulk-deletes recent messages in the current channel.",
+      clearuser: "Deletes recent messages from a selected user.",
+      clearbots: "Deletes recent messages sent by bots.",
+      clearembed: "Deletes recent messages containing embeds.",
+      clearmentions: "Deletes recent messages containing mentions.",
+      clearreactions: "Removes reactions from recent messages.",
+      clearfiles: "Deletes recent messages containing file attachments.",
+      clearimages: "Deletes recent messages containing images.",
+      clearemoji: "Deletes recent messages containing emoji.",
+      channel: "Creates and manages server channels.",
+      list: "Lists members, channels, roles, moderation states, and other server information.",
+      np: "Manages member access to no-prefix commands.",
+      premstatus: "Shows the server's Premium status.",
+      activate: "Activates Premium for the server.",
+      custombot: "Manages Premium custom-bot options.",
+      tag: "Manages Premium tag options.",
+      rr: "Creates and manages reaction-role assignments.",
+      rrole: "Removes roles from selected groups of server members.",
+      ticket: "Configures and manages member-support tickets.",
+      messages: "Shows and manages server message activity counts.",
+      addmessages: "Adds to a member's message activity count.",
+      removemessages: "Removes from a member's message activity count.",
+      resetmessages: "Resets message activity counts.",
+      blacklistchannel: "Adds a channel to the channel blacklist.",
+      unblacklistchannel: "Removes a channel from the channel blacklist.",
+      blacklistedchannels: "Lists blacklisted server channels.",
+      tracker: "Shows or configures server invite tracking.",
+      voicemaster: "Sets up and manages VoiceMaster channels and controls."
+    });
+    Object.assign(commandFeatureNames, {
+      arc: "automatic reaction rules",
+      ar: "automatic reply rules",
+      automod: "automatic moderation rules and settings",
+      extraowner: "trusted extra owners",
+      np: "no-prefix access",
+      rr: "reaction-role assignments",
+      rrole: "member roles",
+      greet: "welcome messages",
+      log: "server event logging",
+      clearall: "messages in this channel",
+      clearuser: "messages from the selected member",
+      clearbots: "messages sent by bots",
+      clearfiles: "messages with file attachments",
+      clearimages: "messages with images",
+      clearembed: "messages with embeds",
+      clearmentions: "messages with mentions",
+      clearreactions: "message reactions",
+      clearemoji: "messages containing emoji",
+      voicemaster: "VoiceMaster settings",
+      ticket: "support ticket settings"
+    });
+    function describeCommand(category, command) {
+      const normalized = command.toLowerCase().replace(/^[>/]/, "").trim();
+      if (specificCommandDescriptions[normalized]) return specificCommandDescriptions[normalized];
+      const [root, ...subcommands] = normalized.split(/\s+/);
+      const rootDescription = commandRootDescriptions[root];
+      if (!rootDescription) return `${command.replace(/^[>/]/, "")} is a ${category.toLowerCase()} command. ${categoryDescriptions[category] || "Use it to manage a feature in your server."}`;
+      const action = subcommands.find(part => Object.hasOwn(commandActionLabels, part));
+      if (!action) return rootDescription;
+      const actionLabel = commandActionLabels[action];
+      const feature = commandFeatureNames[root] || root.replace(/[-_]/g, " ");
+      return `${actionLabel} ${feature} for this server.`;
+    }
+    const docsCategoryGrid = document.getElementById("docs-category-grid");
+    const docsSearch = document.getElementById("docs-search");
+    const docsResultsPanel = document.getElementById("docs-results-panel");
+    const docsResultsHeading = document.getElementById("docs-results-heading");
+    const docsList = document.getElementById("docs-command-list");
+    const docsEmpty = document.getElementById("docs-empty");
+    const docsLoadMore = document.getElementById("docs-load-more");
+    let selectedDocsCategory = "";
+    let visibleDocCount = 8;
+    const documentedCommands = commandData.flatMap(([category, commands]) => commands.map(command => {
+      const description = describeCommand(category, command);
+      return { category, command, description, search: `${category} ${command} ${description}`.toLowerCase() };
+    }));
+    commandData.forEach(([category, commands], index) => {
+      const button = document.createElement("button");
+      button.className = "docs-category-button";
+      button.type = "button";
+      button.dataset.category = category;
+      button.setAttribute("aria-pressed", "false");
+      const mark = document.createElement("span");
+      mark.className = "docs-category-icon";
+      mark.textContent = String(index + 1).padStart(2, "0");
+      const copy = document.createElement("span");
+      copy.className = "docs-category-copy";
+      const name = document.createElement("strong");
+      name.textContent = category;
+      const description = document.createElement("span");
+      description.textContent = categoryDescriptions[category] || "Explore commands for this part of your server.";
+      copy.append(name, description);
+      const count = document.createElement("span");
+      count.className = "docs-category-count";
+      count.textContent = String(commands.length);
+      const arrow = document.createElement("span");
+      arrow.className = "docs-category-arrow";
+      arrow.innerHTML = '<svg aria-hidden="true"><use href="#i-arrow"></use></svg>';
+      button.append(mark, copy, count, arrow);
+      docsCategoryGrid.append(button);
+    });
+    function createDocCommandCard({ category, command, description }) {
+      const card = document.createElement("article");
+      card.className = "doc-command";
+      const head = document.createElement("div");
+      head.className = "doc-command-head";
+      const title = document.createElement("h3");
+      title.textContent = command;
+      const categoryLabel = document.createElement("span");
+      categoryLabel.className = "doc-category";
+      categoryLabel.textContent = category;
+      head.append(title, categoryLabel);
+      const summary = document.createElement("p");
+      summary.textContent = description;
+      const usage = document.createElement("div");
+      usage.className = "doc-usage";
+      const usageLabel = document.createElement("span");
+      usageLabel.className = "doc-usage-label";
+      usageLabel.textContent = "Command";
+      const code = document.createElement("code");
+      code.textContent = command;
+      const copyButton = document.createElement("button");
+      copyButton.className = "copy-button";
+      copyButton.type = "button";
+      copyButton.title = "Copy command";
+      copyButton.setAttribute("aria-label", `Copy ${command}`);
+      copyButton.innerHTML = copyIcon;
+      copyButton.addEventListener("click", () => copyCommand(code.textContent));
+      usage.append(usageLabel, code, copyButton);
+      card.append(head, summary, usage);
+      return card;
+    }
+    const premiumCommandGuide = document.getElementById("premium-command-guide");
+    premiumCommandGroups.forEach(([groupName, commands]) => {
+      const group = document.createElement("section");
+      group.className = "premium-command-group";
+      const heading = document.createElement("h3");
+      heading.textContent = groupName;
+      const list = document.createElement("div");
+      list.className = "premium-command-list";
+      commands.forEach(([command, description]) => {
+        const card = document.createElement("article");
+        card.className = "premium-command";
+        const code = document.createElement("code");
+        code.textContent = command;
+        const copyButton = document.createElement("button");
+        copyButton.className = "copy-button";
+        copyButton.type = "button";
+        copyButton.title = "Copy command";
+        copyButton.setAttribute("aria-label", `Copy ${command}`);
+        copyButton.innerHTML = copyIcon;
+        copyButton.addEventListener("click", () => copyCommand(command));
+        const text = document.createElement("p");
+        text.textContent = description;
+        card.append(code, copyButton, text);
+        list.append(card);
+      });
+      group.append(heading, list);
+      premiumCommandGuide.append(group);
+    });
+    function filterDocs() {
+      const query = docsSearch.value.trim().toLowerCase();
+      docsCategoryGrid.querySelectorAll(".docs-category-button").forEach(button => {
+        const category = button.dataset.category;
+        const categoryCommands = documentedCommands.filter(item => item.category === category);
+        const matchesSearch = !query || category.toLowerCase().includes(query) || categoryCommands.some(item => item.search.includes(query));
+        button.hidden = !matchesSearch;
+        button.classList.toggle("selected", category === selectedDocsCategory);
+        button.setAttribute("aria-pressed", String(category === selectedDocsCategory));
+      });
+      const results = documentedCommands.filter(item =>
+        (!selectedDocsCategory || item.category === selectedDocsCategory) &&
+        (!query || item.search.includes(query))
+      );
+      docsResultsPanel.hidden = !selectedDocsCategory && !query;
+      docsList.replaceChildren(...results.slice(0, visibleDocCount).map(createDocCommandCard));
+      docsEmpty.hidden = results.length > 0;
+      docsLoadMore.hidden = results.length <= visibleDocCount;
+      docsLoadMore.textContent = `Show ${Math.min(8, results.length - visibleDocCount)} more commands`;
+      docsResultsHeading.replaceChildren();
+      if (docsResultsPanel.hidden) return;
+      const headingCopy = document.createElement("div");
+      const heading = document.createElement("h2");
+      heading.textContent = selectedDocsCategory || "Search results";
+      const summary = document.createElement("p");
+      const searchSummary = query ? ` matching "${docsSearch.value.trim()}"` : "";
+      summary.textContent = `${results.length} ${results.length === 1 ? "command" : "commands"}${searchSummary}`;
+      headingCopy.append(heading, summary);
+      const backButton = document.createElement("button");
+      backButton.className = "docs-back-button";
+      backButton.type = "button";
+      backButton.textContent = "All categories";
+      backButton.addEventListener("click", () => {
+        selectedDocsCategory = "";
+        visibleDocCount = 8;
+        filterDocs();
+      });
+      docsResultsHeading.append(headingCopy, backButton);
+    }
+    docsCategoryGrid.addEventListener("click", event => {
+      const button = event.target.closest(".docs-category-button");
+      if (!button) return;
+      selectedDocsCategory = button.dataset.category;
+      visibleDocCount = 8;
+      filterDocs();
+    });
+    docsSearch.addEventListener("input", () => {
+      visibleDocCount = 8;
+      filterDocs();
+    });
+    docsLoadMore.addEventListener("click", () => {
+      visibleDocCount += 8;
+      filterDocs();
+    });
+    filterDocs();
+
+    function filterCommands() {
+      const query = commandSearch.value.trim().toLowerCase();
+      const category = selectedCommandCategory;
+      let visibleCommands = 0;
+      let visibleCategories = 0;
+      commandGroups.querySelectorAll(".command-group").forEach(group => {
+        const categoryMatches = !category || group.dataset.category === category;
+        const searchInCategory = group.dataset.category.toLowerCase().includes(query);
+        let visibleInGroup = 0;
+        group.querySelectorAll(".command-item").forEach(item => {
+          const command = decodeURIComponent(item.dataset.command);
+          const match = categoryMatches && (!query || searchInCategory || command.toLowerCase().includes(query));
+          item.hidden = !match;
+          if (match) visibleInGroup++;
+        });
+        group.hidden = !categoryMatches || visibleInGroup === 0;
+        const header = group.querySelector(".group-head");
+        const list = group.querySelector(".command-list");
+        const expanded = Boolean(query || category) || header.dataset.expanded === "true";
+        setCommandGroupExpanded(header, expanded);
+        header.setAttribute("aria-expanded", String(expanded));
+        if (!group.hidden) {
+          visibleCategories++;
+          visibleCommands += visibleInGroup;
+        }
+      });
+      resultCount.innerHTML = `<strong>${visibleCommands}</strong> listed ${visibleCommands === 1 ? "command" : "commands"} across <strong>${visibleCategories}</strong> ${visibleCategories === 1 ? "category" : "categories"} · ${totalCommandCount} total in Madoka`;
+      emptyState.hidden = visibleCommands !== 0;
+    }
+    function setCommandGroupExpanded(header, expanded) {
+      const list = header.nextElementSibling;
+      list.setAttribute("aria-hidden", String(!expanded));
+      list.inert = !expanded;
+      if (expanded) {
+        list.classList.add("is-open");
+        const inner = list.firstElementChild;
+        const styles = getComputedStyle(list);
+        const verticalPadding = parseFloat(styles.paddingTop) + parseFloat(styles.paddingBottom);
+        list.style.maxHeight = `${inner.scrollHeight + verticalPadding}px`;
+        return;
+      }
+      list.style.maxHeight = `${list.getBoundingClientRect().height}px`;
+      requestAnimationFrame(() => {
+        list.classList.remove("is-open");
+        list.style.maxHeight = "0px";
+      });
+    }
+    commandGroups.addEventListener("transitionend", event => {
+      const list = event.target;
+      if (event.propertyName === "max-height" && list.matches(".command-list") && list.classList.contains("is-open")) {
+        list.style.maxHeight = "none";
+      }
+    });
+    commandSearch.addEventListener("input", filterCommands);
+    categoryFilter.addEventListener("click", event => {
+      const option = event.target.closest(".category-picker-option");
+      if (!option) return;
+      selectedCommandCategory = option.dataset.category;
+      categoryFilterLabel.textContent = selectedCommandCategory || "All categories";
+      categoryFilter.querySelectorAll(".category-picker-option").forEach(item => {
+        item.setAttribute("aria-selected", String(item === option));
+      });
+      categoryPicker.open = false;
+      filterCommands();
+    });
+    commandGroups.addEventListener("click", event => {
+      const header = event.target.closest(".group-head");
+      if (!header) return;
+      const expanded = header.getAttribute("aria-expanded") !== "true";
+      header.dataset.expanded = String(expanded);
+      if (commandSearch.value.trim() || selectedCommandCategory) {
+        setCommandGroupExpanded(header, expanded);
+        header.setAttribute("aria-expanded", String(expanded));
+      } else {
+        filterCommands();
+      }
+    });
+    filterCommands();
+
+    const toast = document.getElementById("toast");
+    let toastTimer;
+    async function copyCommand(command) {
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(command);
+        } else {
+          const temporaryInput = document.createElement("textarea");
+          temporaryInput.value = command;
+          temporaryInput.style.position = "fixed";
+          temporaryInput.style.opacity = "0";
+          document.body.append(temporaryInput);
+          temporaryInput.select();
+          const copied = document.execCommand("copy");
+          temporaryInput.remove();
+          if (!copied) throw new Error("Clipboard access is unavailable.");
+        }
+        document.getElementById("toast-message").textContent = `Copied "${command}"`;
+        toast.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove("show"), 2100);
+      } catch (error) {
+        document.getElementById("toast-message").textContent = "Couldn't copy. Please copy the command manually.";
+        toast.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove("show"), 3200);
+        console.error("Unable to copy command to clipboard:", error);
+      }
+    }
+    commandGroups.addEventListener("click", event => {
+      const button = event.target.closest(".copy-button");
+      if (!button) return;
+      const item = button.closest(".command-item");
+      copyCommand(decodeURIComponent(item.dataset.command));
+    });
+
+    const reviewForm = document.getElementById("review-form");
+    const reviewComment = document.getElementById("review-comment");
+    const reviewStatus = document.getElementById("review-status");
+    const reviewSubmit = document.getElementById("review-submit");
+    const ratingAverage = document.getElementById("review-average");
+    const ratingTotal = document.getElementById("review-total");
+    const ratingDistribution = document.getElementById("rating-distribution");
+    const ratingChart = document.getElementById("rating-chart");
+    const topComments = document.getElementById("top-comments");
+    const communityComments = document.getElementById("community-comments");
+    const reviewsEmpty = document.getElementById("reviews-empty");
+    const reviewsLoadMore = document.getElementById("reviews-load-more");
+    let reviewOffset = 0;
+    let nextSubmissionAt = 0;
+    let cooldownTimer = 0;
+    function updateCooldown(nextAt) {
+      nextSubmissionAt = nextAt ? Date.parse(nextAt) : 0;
+      clearInterval(cooldownTimer);
+      const refreshButton = () => {
+        const remaining = Math.max(0, nextSubmissionAt - Date.now());
+        reviewSubmit.disabled = remaining > 0;
+        if (remaining > 0) {
+          const minutes = Math.floor(remaining / 60000).toString().padStart(2, "0");
+          const seconds = Math.ceil((remaining % 60000) / 1000).toString().padStart(2, "0");
+          reviewSubmit.textContent = `Wait ${minutes}:${seconds}`;
+          reviewStatus.textContent = `Maaari kang mag-submit ulit pagkatapos ng ${minutes}:${seconds}.`;
+          return;
+        }
+        reviewSubmit.textContent = "Share feedback";
+        clearInterval(cooldownTimer);
+      };
+      refreshButton();
+      if (nextSubmissionAt > Date.now()) cooldownTimer = setInterval(refreshButton, 1000);
+    }
+    function createReviewCard(review) {
+      const card = document.createElement("article");
+      card.className = "review-comment-card";
+      const meta = document.createElement("div");
+      meta.className = "review-comment-meta";
+      const stars = document.createElement("span");
+      stars.className = "review-comment-stars";
+      stars.setAttribute("aria-label", `${review.rating} out of 5 stars`);
+      stars.textContent = `${"★".repeat(review.rating)}${"☆".repeat(5 - review.rating)}`;
+      const date = document.createElement("time");
+      date.dateTime = review.createdAt;
+      date.textContent = new Date(review.createdAt).toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+      });
+      meta.append(stars, date);
+      const comment = document.createElement("p");
+      comment.textContent = review.comment;
+      card.append(meta, comment);
+      return card;
+    }
+    function renderRatingDistribution(distribution, total) {
+      ratingDistribution.replaceChildren();
+      for (let rating = 5; rating >= 1; rating--) {
+        const count = distribution[rating] || 0;
+        const row = document.createElement("div");
+        row.className = "rating-row";
+        const label = document.createElement("span");
+        label.textContent = `${rating}★`;
+        const track = document.createElement("div");
+        track.className = "rating-track";
+        const fill = document.createElement("div");
+        fill.className = "rating-fill";
+        fill.style.width = `${total ? count / total * 100 : 0}%`;
+        track.append(fill);
+        const value = document.createElement("span");
+        value.textContent = String(count);
+        row.append(label, track, value);
+        ratingDistribution.append(row);
+      }
+    }
+    function renderRatingChart(days) {
+      ratingChart.replaceChildren();
+      const highestCount = Math.max(1, ...days.map(day => day.count));
+      days.forEach(day => {
+        const item = document.createElement("div");
+        item.className = "rating-day";
+        const bar = document.createElement("div");
+        bar.className = "rating-day-bar";
+        bar.title = `${day.count} ${day.count === 1 ? "rating" : "ratings"} on ${day.date}`;
+        const fill = document.createElement("span");
+        fill.style.height = day.count ? `${Math.max(8, day.count / highestCount * 100)}%` : "0";
+        bar.append(fill);
+        const date = document.createElement("time");
+        date.dateTime = day.date;
+        date.textContent = day.date.slice(-2);
+        date.setAttribute("aria-label", day.date);
+        item.append(bar, date);
+        ratingChart.append(item);
+      });
+    }
+    async function loadReviews({ append = false } = {}) {
+      const offset = append ? reviewOffset : 0;
+      const response = await fetch(`/api/reviews?offset=${offset}`);
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Unable to load community feedback.");
+      const { summary } = data;
+      ratingAverage.textContent = summary.averageRating === null ? "—" : summary.averageRating.toFixed(1);
+      ratingTotal.textContent = `${summary.totalRatings} ${summary.totalRatings === 1 ? "rating" : "ratings"} · ${summary.totalComments} ${summary.totalComments === 1 ? "comment" : "comments"}`;
+      renderRatingDistribution(summary.distribution, summary.totalRatings);
+      renderRatingChart(summary.dailyRatings);
+      topComments.replaceChildren(...data.topComments.map(createReviewCard));
+      if (!data.topComments.length) {
+        const empty = document.createElement("p");
+        empty.className = "review-empty";
+        empty.textContent = "There are no featured comments yet.";
+        topComments.append(empty);
+      }
+      if (!append) communityComments.replaceChildren();
+      communityComments.append(...data.comments.map(createReviewCard));
+      reviewOffset = offset + data.comments.length;
+      reviewsEmpty.hidden = data.pagination.total !== 0;
+      reviewsLoadMore.hidden = !data.pagination.hasMore;
+      updateCooldown(data.nextSubmissionAt);
+    }
+    loadReviews().catch(error => {
+      reviewStatus.textContent = "Unable to load shared feedback. Make sure the Madoka website server is running.";
+      console.error("Unable to load public Madoka feedback:", error);
+      ratingTotal.textContent = "Shared feedback is unavailable.";
+      topComments.textContent = "Unable to load featured comments.";
+      communityComments.textContent = "Unable to load community comments.";
+    });
+    reviewForm.addEventListener("submit", event => {
+      event.preventDefault();
+      const selectedRating = reviewForm.querySelector('input[name="rating"]:checked');
+      if (!selectedRating) {
+        reviewStatus.textContent = "Select a star rating first.";
+        return;
+      }
+      reviewSubmit.disabled = true;
+      reviewStatus.textContent = "Submitting feedback…";
+      fetch("/api/reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          rating: Number(selectedRating.value),
+          comment: reviewComment.value.trim()
+        })
+      }).then(async response => {
+        const data = await response.json();
+        if (!response.ok) {
+          if (response.status === 429) updateCooldown(data.nextSubmissionAt);
+          throw new Error(data.message || "Unable to submit feedback.");
+        }
+        reviewForm.querySelectorAll('input[name="rating"]').forEach(input => { input.checked = false; });
+        reviewComment.value = "";
+        reviewStatus.textContent = data.message;
+        updateCooldown(data.nextSubmissionAt);
+        reviewOffset = 0;
+        return loadReviews();
+      }).catch(error => {
+        reviewStatus.textContent = error.message || "Unable to submit feedback.";
+        console.error("Unable to submit public Madoka feedback:", error);
+        if (!nextSubmissionAt || nextSubmissionAt <= Date.now()) reviewSubmit.disabled = false;
+      });
+    });
+    reviewsLoadMore.addEventListener("click", () => {
+      reviewsLoadMore.disabled = true;
+      loadReviews({ append: true }).catch(error => {
+        reviewStatus.textContent = "Unable to load more comments.";
+        console.error("Unable to load more public Madoka comments:", error);
+      }).finally(() => { reviewsLoadMore.disabled = false; });
+    });
+
+    document.querySelectorAll(".developer-profile-avatar").forEach(image => {
+      const showAvatarFallback = () => {
+        const fallback = document.createElement("span");
+        fallback.className = "developer-profile-avatar-fallback";
+        fallback.textContent = image.dataset.fallback || "?";
+        fallback.setAttribute("aria-hidden", "true");
+        image.replaceWith(fallback);
+      };
+      image.addEventListener("error", showAvatarFallback, { once: true });
+      if (image.complete && image.naturalWidth === 0) showAvatarFallback();
+    });
+
+    const pageNames = { home: "Home", docs: "Docs", commands: "Commands", premium: "Premium", developers: "Madoka Developers" };
+    function showPage(pageName) {
+      if (!pageNames[pageName]) return;
+      document.querySelectorAll(".page").forEach(page => page.classList.toggle("active", page.id === `page-${pageName}`));
+      document.querySelectorAll(".nav-button").forEach(button => {
+        const active = button.dataset.page === pageName;
+        button.classList.toggle("active", active);
+        if (active) button.setAttribute("aria-current", "page");
+        else button.removeAttribute("aria-current");
+      });
+      document.getElementById("crumb-page").textContent = pageNames[pageName];
+      if (history.replaceState) history.replaceState(null, "", `#${pageName}`);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    document.querySelectorAll(".nav-button").forEach(button => button.addEventListener("click", () => showPage(button.dataset.page)));
+    document.querySelectorAll("[data-goto]").forEach(button => button.addEventListener("click", () => showPage(button.dataset.goto)));
+    const themeToggle = document.getElementById("theme-toggle");
+    const savedTheme = localStorage.getItem("madoka-theme");
+    const themes = ["light", "pink", "dark"];
+    const initialTheme = themes.includes(savedTheme) ? savedTheme : "pink";
+    function applyTheme(theme) {
+      const nextTheme = theme === "light" ? "pink" : theme === "pink" ? "dark" : "light";
+      const themeLabels = { light: "Light theme", pink: "Pink theme", dark: "Dark theme" };
+      document.documentElement.dataset.theme = theme;
+      themeToggle.setAttribute("aria-label", `Switch to ${themeLabels[nextTheme].toLowerCase()}`);
+      themeToggle.setAttribute("aria-pressed", String(theme !== "light"));
+      themeToggle.querySelector("use").setAttribute("href", nextTheme === "dark" ? "#i-moon" : nextTheme === "pink" ? "#i-sparkle" : "#i-sun");
+      themeToggle.querySelector("span").textContent = themeLabels[nextTheme];
+      document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#141218" : theme === "pink" ? "#fff6fb" : "#f7f8fc";
+    }
+    applyTheme(initialTheme);
+    themeToggle.addEventListener("click", () => {
+      const currentTheme = document.documentElement.dataset.theme;
+      const nextTheme = themes[(themes.indexOf(currentTheme) + 1) % themes.length];
+      localStorage.setItem("madoka-theme", nextTheme);
+      applyTheme(nextTheme);
+    });
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!reduceMotion) {
+      const ambientCanvas = document.getElementById("ambient-canvas");
+      const cursorCanvas = document.getElementById("cursor-trail");
+      const ambientContext = ambientCanvas.getContext("2d");
+      const cursorContext = cursorCanvas.getContext("2d");
+      const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+      if (!finePointer) cursorCanvas.style.display = "none";
+      const petals = Array.from({ length: finePointer ? 28 : 18 }, () => ({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        size: 2 + Math.random() * 4,
+        speed: .12 + Math.random() * .32,
+        sway: Math.random() * Math.PI * 2,
+        alpha: .13 + Math.random() * .22
+      }));
+      const pointerTrail = [];
+      function resizeCanvases() {
+        const ratio = Math.min(window.devicePixelRatio || 1, 2);
+        [ambientCanvas, cursorCanvas].forEach(canvas => {
+          canvas.width = Math.round(window.innerWidth * ratio);
+          canvas.height = Math.round(window.innerHeight * ratio);
+          canvas.style.width = `${window.innerWidth}px`;
+          canvas.style.height = `${window.innerHeight}px`;
+          canvas.getContext("2d").setTransform(ratio, 0, 0, ratio, 0, 0);
+        });
+      }
+      window.addEventListener("resize", resizeCanvases, { passive: true });
+      resizeCanvases();
+      if (finePointer) {
+        window.addEventListener("pointermove", event => {
+          if (event.pointerType !== "mouse") return;
+          pointerTrail.push({ x: event.clientX, y: event.clientY, life: 1 });
+          if (pointerTrail.length > 24) pointerTrail.shift();
+        }, { passive: true });
+      }
+      function animateAmbient() {
+        ambientContext.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        petals.forEach(petal => {
+          petal.y += petal.speed;
+          petal.sway += .008;
+          petal.x += Math.sin(petal.sway) * .22;
+          if (petal.y > window.innerHeight + 12) {
+            petal.y = -12;
+            petal.x = Math.random() * window.innerWidth;
+          }
+          ambientContext.save();
+          ambientContext.translate(petal.x, petal.y);
+          ambientContext.rotate(petal.sway);
+          ambientContext.globalAlpha = petal.alpha;
+          ambientContext.fillStyle = "#eb5caa";
+          ambientContext.beginPath();
+          ambientContext.moveTo(0, -petal.size);
+          ambientContext.bezierCurveTo(petal.size * .8, -petal.size * .6, petal.size * .8, petal.size * .5, 0, petal.size);
+          ambientContext.bezierCurveTo(-petal.size * .8, petal.size * .5, -petal.size * .8, -petal.size * .6, 0, -petal.size);
+          ambientContext.fill();
+          ambientContext.restore();
+        });
+        if (finePointer) {
+          cursorContext.clearRect(0, 0, window.innerWidth, window.innerHeight);
+          pointerTrail.forEach((point, index) => {
+            point.life -= .035;
+            cursorContext.globalAlpha = Math.max(point.life, 0);
+            cursorContext.fillStyle = "#f052a5";
+            cursorContext.shadowColor = "#f052a5";
+            cursorContext.shadowBlur = 10;
+            cursorContext.beginPath();
+            cursorContext.arc(point.x, point.y, 1.2 + point.life * 2.2, 0, Math.PI * 2);
+            cursorContext.fill();
+            if (index > 0) {
+              const previous = pointerTrail[index - 1];
+              cursorContext.strokeStyle = "#f052a5";
+              cursorContext.globalAlpha = Math.max(point.life, 0) * .4;
+              cursorContext.lineWidth = 2.4;
+              cursorContext.beginPath();
+              cursorContext.moveTo(previous.x, previous.y);
+              cursorContext.lineTo(point.x, point.y);
+              cursorContext.stroke();
+            }
+          });
+          while (pointerTrail.length && pointerTrail[0].life <= 0) pointerTrail.shift();
+        }
+        window.requestAnimationFrame(animateAmbient);
+      }
+      window.requestAnimationFrame(animateAmbient);
+    }
+    const initialPage = location.hash.slice(1);
+    if (pageNames[initialPage]) showPage(initialPage);
+
+  </script>
+
+</body>
+</html>
