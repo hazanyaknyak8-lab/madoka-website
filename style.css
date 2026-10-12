@@ -46,13 +46,13 @@
     body { position: relative; overflow-x: clip; margin: 0; min-width: 0; min-height: 100vh; color: var(--ink); background: radial-gradient(ellipse at 82% 7%, #ffe2f2 0, transparent 38%), var(--canvas); font-size: 16px; transition: color .25s ease, background-color .25s ease; }
     :root[data-theme="dark"] body { background: radial-gradient(ellipse at 82% 7%, #302637 0, transparent 38%), var(--canvas); }
     :root[data-theme="pink"] body { background: radial-gradient(ellipse at 82% 7%, #ffe2f2 0, transparent 38%), var(--canvas); }
-    body::before { position: fixed; inset: -25%; z-index: 0; pointer-events: none; background: radial-gradient(ellipse at 20% 30%, #dfe7f466, transparent 38%), radial-gradient(ellipse at 76% 72%, #e3e6f166, transparent 34%); content: ""; animation: ambient-drift 22s ease-in-out infinite alternate; }
+    body::before { position: fixed; inset: -12%; z-index: 0; pointer-events: none; background: radial-gradient(ellipse at 20% 30%, #dfe7f466, transparent 38%), radial-gradient(ellipse at 76% 72%, #e3e6f166, transparent 34%); content: ""; animation: ambient-drift 22s ease-in-out infinite alternate; will-change: transform; }
     :root[data-theme="dark"] body::before { background: radial-gradient(ellipse at 20% 30%, #5c3c5940, transparent 38%), radial-gradient(ellipse at 76% 72%, #382d3e40, transparent 34%); }
     :root[data-theme="pink"] body::before { background: radial-gradient(ellipse at 20% 30%, #ffc1e340, transparent 38%), radial-gradient(ellipse at 76% 72%, #f9cce366, transparent 34%); }
     .ambient-canvas, .cursor-trail { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
     .ambient-canvas { z-index: 0; }
     .cursor-trail { z-index: 30; }
-    @keyframes ambient-drift { from { transform: translate3d(-1%, -1%, 0) scale(1); } to { transform: translate3d(1.5%, 1%, 0) scale(1.04); } }
+    @keyframes ambient-drift { from { transform: translate3d(-1.5%, -1%, 0) scale(1); } to { transform: translate3d(1.5%, 1%, 0) scale(1.04); } }
     button, input, select { font: inherit; }
     button { color: inherit; }
     a { color: inherit; text-decoration: none; }
@@ -1325,7 +1325,7 @@
       color: #ffc5e0;
       cursor: pointer;
       transform: translateY(-50%);
-      transition: right .38s ease, background .2s ease, color .2s ease, box-shadow .2s ease;
+      transition: right .18s cubic-bezier(.2,.8,.2,1), background .14s ease, color .14s ease, box-shadow .14s ease;
     }
     .sidebar-collapse:hover { background: #613c55; box-shadow: 0 8px 20px #09070b88, 0 0 12px #eb5caa36; color: #fff; }
     .sidebar-collapse svg { width: 17px; height: 17px; transition: transform .38s cubic-bezier(.2,.8,.2,1); }
@@ -1766,5 +1766,5 @@
       .nav-button[data-page="developers"] .nav-text::after { font-size: 8px; }
     }
     @media (prefers-reduced-motion: reduce) {
-      .intro-splash, .intro-mark, .intro-name, .intro-subtitle, .intro-line::after, .page { animation: none; }
+      body::before, .intro-splash, .intro-mark, .intro-name, .intro-subtitle, .intro-line::after, .page { animation: none; }
     }
