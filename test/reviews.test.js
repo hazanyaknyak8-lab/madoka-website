@@ -1,7 +1,7 @@
 const assert = require("node:assert/strict");
 const test = require("node:test");
 const { createHandler } = require("../api/reviews");
-const { createLocalServer } = require("../server");
+const { createLocalServer } = require("../local-server");
 
 async function startApp(t, service) {
   const server = createLocalServer({
@@ -22,19 +22,15 @@ function createService({ submissionResults = [] } = {}) {
   const calls = { dashboard: [], submissions: [] };
   return {
     calls,
-    async getDashboard(visitorId, offset, now) {
-      calls.dashboard.push({ visitorId, offset, now });
+    async getDashboard(visitorId, now) {
+      calls.dashboard.push({ visitorId, now });
       return {
         summary: {
           totalRatings: 2,
           averageRating: 4.5,
           distribution: { 1: 0, 2: 0, 3: 0, 4: 1, 5: 1 },
-          dailyRatings: [{ date: "2026-06-01", count: 2 }],
-          totalComments: 1
+          dailyRatings: [{ date: "2026-06-01", count: 2 }]
         },
-        topComments: [{ id: 2, rating: 5, comment: "<script>alert(1)</script>" }],
-        comments: [],
-        pagination: { offset, limit: 20, total: 1, hasMore: false },
         nextSubmissionAt: null
       };
     },
@@ -58,10 +54,10 @@ async function postReview(baseUrl, cookie, review, headers = {}) {
   });
 }
 
-test("serves the feedback dashboard and forwards a bounded comment offset", async t => {
+test("serves rating analytics without exposing submitted comments", async t => {
   const service = createService();
   const baseUrl = await startApp(t, service);
-  const initial = await fetch(`${baseUrl}/api/reviews?offset=20`);
+  const initial = await fetch(`${baseUrl}/api/reviews`);
   assert.equal(initial.status, 200);
   assert.match(initial.headers.get("set-cookie"), /HttpOnly/);
   const cookie = initial.headers.get("set-cookie").split(";")[0];
@@ -69,13 +65,12 @@ test("serves the feedback dashboard and forwards a bounded comment offset", asyn
 
   assert.equal(data.summary.totalRatings, 2);
   assert.equal(data.summary.averageRating, 4.5);
-  assert.equal(data.topComments[0].comment, "<script>alert(1)</script>");
-  assert.equal(service.calls.dashboard[0].offset, 20);
+  assert.deepEqual(data.summary.dailyRatings, [{ date: "2026-06-01", count: 2 }]);
+  assert.equal("comments" in data, false);
+  assert.equal("topComments" in data, false);
+  assert.equal("pagination" in data, false);
   assert.match(service.calls.dashboard[0].visitorId, /^[A-Za-z0-9_-]{43}$/);
   assert.equal(service.calls.dashboard[0].visitorId, cookie.slice("madoka_visitor=".length));
-
-  const invalidOffset = await fetch(`${baseUrl}/api/reviews?offset=-1`);
-  assert.equal(invalidOffset.status, 400);
 });
 
 test("validates same-origin JSON submissions and accepts valid feedback", async t => {
@@ -125,7 +120,15 @@ test("serves the static page and the animated avatar", async t => {
   const site = await fetch(baseUrl);
   assert.equal(site.status, 200);
   assert.match(site.headers.get("content-type"), /text\/html/);
-  assert.match(await site.text(), /Community comments/);
+  const html = await site.text();
+  assert.match(html, /rating-chart/);
+  assert.match(html, /href="\/styles\.css"/);
+  assert.doesNotMatch(html, /<style>/i);
+  assert.doesNotMatch(html, /Community comments/);
+
+  const stylesheet = await fetch(`${baseUrl}/styles.css`);
+  assert.equal(stylesheet.status, 200);
+  assert.match(stylesheet.headers.get("content-type"), /text\/css/);
 
   const avatar = await fetch(`${baseUrl}/madoka-avatar.gif`);
   assert.equal(avatar.status, 200);
