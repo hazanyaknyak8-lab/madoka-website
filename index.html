@@ -1395,9 +1395,17 @@ const mainFeatures = [
         ratingChart.append(item);
       });
     }
+    async function readReviewsResponse(response) {
+      const body = await response.text();
+      try {
+        return JSON.parse(body);
+      } catch {
+        throw new Error(`The feedback server returned an invalid response (HTTP ${response.status}). Check the Vercel Function logs.`);
+      }
+    }
     async function loadReviews() {
       const response = await fetch("/api/reviews");
-      const data = await response.json();
+      const data = await readReviewsResponse(response);
       if (!response.ok) throw new Error(data.message || "Unable to load community feedback.");
       const { summary } = data;
       ratingAverage.textContent = summary.averageRating === null ? "—" : summary.averageRating.toFixed(1);
@@ -1407,7 +1415,7 @@ const mainFeatures = [
       updateCooldown(data.nextSubmissionAt);
     }
     loadReviews().catch(error => {
-      reviewStatus.textContent = "Unable to load shared feedback. Make sure the Madoka website server is running.";
+      reviewStatus.textContent = error.message || "Unable to load shared feedback.";
       console.error("Unable to load public Madoka feedback:", error);
       ratingTotal.textContent = "Shared feedback is unavailable.";
     });
@@ -1428,7 +1436,7 @@ const mainFeatures = [
           comment: reviewComment.value.trim()
         })
       }).then(async response => {
-        const data = await response.json();
+        const data = await readReviewsResponse(response);
         if (!response.ok) {
           if (response.status === 429) updateCooldown(data.nextSubmissionAt);
           throw new Error(data.message || "Unable to submit feedback.");
@@ -1667,7 +1675,7 @@ const mainFeatures = [
       const pointerTrail = [];
       let trailFrame = 0;
       function resizeCanvases() {
-        const ratio = Math.min(window.devicePixelRatio || 1, 2);
+        const ratio = Math.min(window.devicePixelRatio || 1, 1.5);
         cursorCanvas.width = Math.round(window.innerWidth * ratio);
         cursorCanvas.height = Math.round(window.innerHeight * ratio);
         cursorCanvas.style.width = `${window.innerWidth}px`;
@@ -1693,13 +1701,32 @@ const mainFeatures = [
             spin: (Math.random() - .5) * .07,
             sparkle: Math.random() > .82
           });
-          if (pointerTrail.length > 18) pointerTrail.shift();
+          if (pointerTrail.length > 12) pointerTrail.shift();
           if (!trailFrame) trailFrame = window.requestAnimationFrame(animateTrail);
         }, { passive: true });
       }
       function animateTrail() {
         trailFrame = 0;
-        cursorContext.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        if (pointerTrail.length) {
+          const bounds = pointerTrail.reduce((area, point) => ({
+            left: Math.min(area.left, point.x),
+            top: Math.min(area.top, point.y),
+            right: Math.max(area.right, point.x),
+            bottom: Math.max(area.bottom, point.y)
+          }), {
+            left: pointerTrail[0].x,
+            top: pointerTrail[0].y,
+            right: pointerTrail[0].x,
+            bottom: pointerTrail[0].y
+          });
+          const padding = 6;
+          cursorContext.clearRect(
+            Math.max(0, bounds.left - padding),
+            Math.max(0, bounds.top - padding),
+            Math.min(window.innerWidth, bounds.right + padding) - Math.max(0, bounds.left - padding),
+            Math.min(window.innerHeight, bounds.bottom + padding) - Math.max(0, bounds.top - padding)
+          );
+        }
         pointerTrail.forEach(point => {
           point.life -= .05;
           point.rotation += point.spin;
