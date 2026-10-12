@@ -219,4 +219,5 @@ function createHandler({ resolveService = getDefaultService, now = () => new Dat
   };
 }
 
-module.exports = { createHandler, createNeonService, handler: createHandler() };
+const handler = createHandler();
+module.exports = Object.assign(handler, { createHandler, createNeonService, handler });
