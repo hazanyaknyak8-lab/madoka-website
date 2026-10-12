@@ -3,6 +3,13 @@ const test = require("node:test");
 const { createHandler } = require("../api/reviews");
 const { createLocalServer } = require("../local-server");
 
+test("exports the API handler in a Vercel-compatible form", () => {
+  const api = require("../api/reviews");
+  assert.equal(typeof api, "function");
+  assert.equal(api.handler, api);
+  assert.equal(typeof api.createHandler, "function");
+});
+
 async function startApp(t, service) {
   const server = createLocalServer({
     reviewsHandler: createHandler({ resolveService: async () => service })
