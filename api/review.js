@@ -1,7 +1,6 @@
 const { randomBytes } = require("node:crypto");
 
 const COOLDOWN_MS = 5 * 60 * 1000;
-const PAGE_SIZE = 20;
 
 function sendJson(response, statusCode, payload, headers = {}) {
   response.writeHead(statusCode, {
@@ -24,11 +23,6 @@ function getVisitorId(request, response) {
   const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";
   response.setHeader("Set-Cookie", `madoka_visitor=${visitorId}; Max-Age=31536000; Path=/; HttpOnly; SameSite=Lax${secure}`);
   return visitorId;
-}
-
-function parseOffset(value) {
-  const offset = Number(value ?? 0);
-  return Number.isSafeInteger(offset) && offset >= 0 && offset <= 100000 ? offset : null;
 }
 
 function getUtcDateRange(now) {
@@ -67,16 +61,13 @@ function createNeonService(sql) {
     await schemaPromise;
   }
 
-  async function getDashboard(visitorId, offset, now) {
+  async function getDashboard(visitorId, now) {
     await initialize();
     const { firstDay, firstDayString } = getUtcDateRange(now);
     const [
       [aggregate],
       distributionRows,
       dailyRows,
-      [commentCount],
-      comments,
-      topComments,
       [visitor]
     ] = await Promise.all([
       sql`SELECT COUNT(*)::int AS total, ROUND(AVG(rating)::numeric, 1)::float AS average
@@ -87,13 +78,6 @@ function createNeonService(sql) {
         FROM reviews
         WHERE created_at >= ${`${firstDayString}T00:00:00.000Z`}::timestamptz
         GROUP BY date`,
-      sql`SELECT COUNT(*)::int AS total FROM reviews WHERE comment <> ''`,
-      sql`SELECT id, rating, comment, created_at AS "createdAt"
-        FROM reviews WHERE comment <> ''
-        ORDER BY created_at DESC, id DESC LIMIT ${PAGE_SIZE} OFFSET ${offset}`,
-      sql`SELECT id, rating, comment, created_at AS "createdAt"
-        FROM reviews WHERE comment <> ''
-        ORDER BY rating DESC, created_at DESC, id DESC LIMIT 3`,
       sql`SELECT last_submission_at AS "lastSubmissionAt"
         FROM review_visitors WHERE visitor_id = ${visitorId}`
     ]);
@@ -117,16 +101,7 @@ function createNeonService(sql) {
           Array.from({ length: 5 }, (_, index) => [index + 1, 0])
             .map(([rating]) => [rating, Number(distributionRows.find(row => Number(row.rating) === rating)?.count || 0)])
         ),
-        dailyRatings,
-        totalComments: Number(commentCount.total)
-      },
-      topComments,
-      comments,
-      pagination: {
-        offset,
-        limit: PAGE_SIZE,
-        total: Number(commentCount.total),
-        hasMore: offset + comments.length < Number(commentCount.total)
+        dailyRatings
       },
       nextSubmissionAt: nextSubmissionAt && nextSubmissionAt.getTime() > now.getTime()
         ? nextSubmissionAt.toISOString()
@@ -188,10 +163,8 @@ function createHandler({ resolveService = getDefaultService, now = () => new Dat
       }
       const visitorId = getVisitorId(request, response);
       if (request.method === "GET") {
-        const offset = parseOffset(requestUrl.searchParams.get("offset"));
-        if (offset === null) return sendJson(response, 400, { message: "offset must be a non-negative integer." });
         const service = await resolveService();
-        const dashboard = await service.getDashboard(visitorId, offset, now());
+        const dashboard = await service.getDashboard(visitorId, now());
         return sendJson(response, 200, dashboard);
       }
       if (request.method !== "POST") {
